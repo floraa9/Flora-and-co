@@ -114,7 +114,7 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL WITH MULTI-IMAGE GALLERY -->
+  <!-- PRODUCT DETAIL MODAL -->
   <div id="productModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-pink-100 max-h-[90vh] flex flex-col">
       
@@ -273,7 +273,7 @@
           <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Store & Colors</button>
         </div>
 
-        <!-- PRODUCTS TAB (ADD & EDIT WITH MULTI-IMAGE & SALE OPTIONS) -->
+        <!-- PRODUCTS TAB -->
         <div id="adminTabProducts" class="space-y-6">
           <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-100 space-y-3">
             <div class="flex justify-between items-center">
@@ -288,9 +288,9 @@
               <select id="newProdCategory" class="px-3 py-2 border rounded-lg text-xs bg-white"></select>
             </div>
 
-            <!-- Pricing Mode Selector (Fixed vs Size Variants) -->
+            <!-- Pricing & Size Variant Control -->
             <div class="space-y-2 bg-white p-3 rounded-lg border border-pink-100">
-              <label class="block text-[11px] font-bold text-gray-700">Pricing Mode</label>
+              <label class="block text-[11px] font-bold text-gray-700">Pricing & Size Variants Mode</label>
               <div class="flex items-center space-x-4 text-xs">
                 <label class="flex items-center space-x-1">
                   <input type="radio" name="priceMode" value="single" checked onchange="togglePricingModeUI()">
@@ -298,38 +298,36 @@
                 </label>
                 <label class="flex items-center space-x-1">
                   <input type="radio" name="priceMode" value="sizes" onchange="togglePricingModeUI()">
-                  <span>Multiple Size Variants</span>
+                  <span>Multiple Sizes with Separate Prices & Stock</span>
                 </label>
               </div>
 
               <!-- Fixed Price Inputs -->
-              <div id="singlePriceInputs" class="grid grid-cols-2 gap-3 pt-2">
+              <div id="singlePriceInputs" class="grid grid-cols-3 gap-3 pt-2">
                 <div>
                   <label class="block text-[10px] text-gray-500 mb-0.5">Sale Price (EGP) *</label>
                   <input type="number" id="newProdPrice" placeholder="e.g. 250" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
                 </div>
                 <div>
-                  <label class="block text-[10px] text-gray-500 mb-0.5">Original Strikethrough Price (Optional for Sale)</label>
+                  <label class="block text-[10px] text-gray-500 mb-0.5">Original Strikethrough Price (Optional)</label>
                   <input type="number" id="newProdOriginalPrice" placeholder="e.g. 300" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                </div>
+                <div>
+                  <label class="block text-[10px] text-gray-500 mb-0.5">Inventory Stock *</label>
+                  <input type="number" id="newProdStock" placeholder="Stock Level" value="10" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
                 </div>
               </div>
 
-              <!-- Size Variants Input -->
+              <!-- Size Variants with Separate Stock -->
               <div id="sizesPriceInputs" class="pt-2 hidden">
-                <label class="block text-[10px] text-gray-500 mb-0.5">Sizes & Prices (Format: Name:Price, e.g. Small:150, Medium:200, Large:250)</label>
-                <input type="text" id="newProdSizes" placeholder="Small:150, Medium:200, Large:250" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                <label class="block text-[10px] text-gray-500 mb-0.5">Sizes, Prices & Stock (Format: Name:Price:Stock, e.g. Small:150:5, Medium:200:10, Large:250:0)</label>
+                <input type="text" id="newProdSizes" placeholder="Small:150:5, Medium:200:10, Large:250:0" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-[10px] font-bold text-gray-500 mb-1">Inventory Stock Quantity</label>
-                <input type="number" id="newProdStock" placeholder="Stock Level" value="10" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-gray-500 mb-1">Upload Multiple Product Photos</label>
-                <input type="file" id="newProdImageFiles" accept="image/*" multiple class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700">
-              </div>
+            <div>
+              <label class="block text-[10px] font-bold text-gray-500 mb-1">Upload Multiple Product Photos</label>
+              <input type="file" id="newProdImageFiles" accept="image/*" multiple class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700">
             </div>
 
             <textarea id="newProdDesc" rows="2" placeholder="Product description..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
@@ -360,7 +358,7 @@
           <div id="adminCategoriesList" class="space-y-2"></div>
         </div>
 
-        <!-- STORE SETTINGS & RETURNS POLICY TAB -->
+        <!-- STORE SETTINGS TAB -->
         <div id="adminTabSettings" class="space-y-4 hidden">
           
           <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Payment Methods Control</h4>
@@ -371,7 +369,7 @@
 
           <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">2. Returns & Exchanges Policy Details</h4>
           <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
-            <label class="block text-xs font-bold text-gray-700">Returns & Exchanges Policy Text (Visible in Footer & Policy Modal):</label>
+            <label class="block text-xs font-bold text-gray-700">Returns & Exchanges Policy Text:</label>
             <textarea id="cfgReturnsPolicy" rows="4" placeholder="Enter your return conditions, timelines, and refund rules here..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
           </div>
 
@@ -474,7 +472,7 @@
         price: 250,
         originalPrice: 300,
         stock: 5,
-        sizes: [ { name: 'Small', price: 200 }, { name: 'Medium', price: 250 } ],
+        sizes: [ { name: 'Small', price: 200, stock: 3 }, { name: 'Medium', price: 250, stock: 2 }, { name: 'Large', price: 300, stock: 0 } ],
         allowCustomText: true,
         images: ['https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=600'],
         description: 'Handcrafted sewn make-up pouch with floral cotton lining and durable zipper.'
@@ -604,6 +602,13 @@
       renderStorefront();
     }
 
+    function isProductTotalSoldOut(p) {
+      if (p.sizes && p.sizes.length > 0) {
+        return p.sizes.every(s => s.stock !== undefined && s.stock <= 0);
+      }
+      return p.stock !== undefined && p.stock <= 0;
+    }
+
     function renderStorefront() {
       const container = document.getElementById('storeSectionsContainer');
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -637,7 +642,7 @@
             
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
               ${catProducts.map(p => {
-                const isSoldOut = p.stock !== undefined && p.stock <= 0;
+                const isSoldOut = isProductTotalSoldOut(p);
                 const isOnSale = p.originalPrice && p.originalPrice > p.price;
                 const displayImg = (p.images && p.images.length > 0) ? p.images[0] : (p.image || '');
 
@@ -669,7 +674,6 @@
       container.innerHTML = html;
     }
 
-    // PRODUCT MODAL WITH GALLERY & SALE DISPLAY
     function openProductModal(productId) {
       currentModalProduct = products.find(p => p.id === productId);
       if (!currentModalProduct) return;
@@ -678,11 +682,9 @@
       currentModalImgIndex = 0;
       document.getElementById('modalQtyDisplay').innerText = '1';
 
-      // Load Images
       const imgList = (currentModalProduct.images && currentModalProduct.images.length > 0) ? currentModalProduct.images : [(currentModalProduct.image || '')];
       document.getElementById('modalProductImg').src = imgList[0];
 
-      // Render Gallery Thumbnails
       const thumbContainer = document.getElementById('modalGalleryThumbnails');
       if (imgList.length > 1) {
         thumbContainer.innerHTML = imgList.map((img, idx) => `
@@ -695,7 +697,6 @@
       document.getElementById('modalProductTitle').innerText = currentModalProduct.title;
       document.getElementById('modalProductDesc').innerText = currentModalProduct.description;
 
-      // Sale Price Display
       const isOnSale = currentModalProduct.originalPrice && currentModalProduct.originalPrice > currentModalProduct.price;
       const saleBadge = document.getElementById('modalSaleBadge');
       const origPriceEl = document.getElementById('modalOriginalPrice');
@@ -707,22 +708,6 @@
       } else {
         saleBadge.classList.add('hidden');
         origPriceEl.classList.add('hidden');
-      }
-
-      const isSoldOut = currentModalProduct.stock !== undefined && currentModalProduct.stock <= 0;
-      const stockBadge = document.getElementById('modalStockStatus');
-      const addBtn = document.getElementById('modalAddToCartBtn');
-
-      if (isSoldOut) {
-        stockBadge.innerText = 'SOLD OUT';
-        stockBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-600';
-        addBtn.disabled = true;
-        addBtn.className = 'w-full bg-gray-300 text-gray-500 py-3 rounded-xl font-bold text-sm cursor-not-allowed';
-      } else {
-        stockBadge.innerText = `In Stock (${currentModalProduct.stock || 10})`;
-        stockBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-700';
-        addBtn.disabled = false;
-        addBtn.className = 'w-full brand-bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-md transition hover:opacity-90';
       }
 
       const catObj = categories.find(c => c.id === currentModalProduct.category);
@@ -738,20 +723,24 @@
 
       const sizeContainer = document.getElementById('modalSizeContainer');
       const sizeOptions = document.getElementById('modalSizeOptions');
+      
       if (currentModalProduct.sizes && currentModalProduct.sizes.length > 0) {
         sizeContainer.classList.remove('hidden');
         selectedSize = currentModalProduct.sizes[0];
-        sizeOptions.innerHTML = currentModalProduct.sizes.map((s, idx) => `
-          <button onclick="selectModalSize(${idx})" class="size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold ${idx === 0 ? 'brand-bg-primary text-white border-transparent' : 'bg-white text-gray-700 border-gray-200'}">
-            ${s.name} (${s.price} EGP)
-          </button>
-        `).join('');
+        sizeOptions.innerHTML = currentModalProduct.sizes.map((s, idx) => {
+          const isSizeSoldOut = s.stock !== undefined && s.stock <= 0;
+          return `
+            <button onclick="selectModalSize(${idx})" class="size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold ${idx === 0 ? 'brand-bg-primary text-white border-transparent' : 'bg-white text-gray-700 border-gray-200'} ${isSizeSoldOut ? 'opacity-50' : ''}">
+              ${s.name} (${s.price} EGP) ${isSizeSoldOut ? '- Sold Out' : ''}
+            </button>
+          `;
+        }).join('');
       } else {
         sizeContainer.classList.add('hidden');
         selectedSize = null;
       }
 
-      updateModalPriceDisplay();
+      updateModalStockAndPrice();
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -774,6 +763,9 @@
 
     function selectModalSize(index) {
       selectedSize = currentModalProduct.sizes[index];
+      selectedQty = 1;
+      document.getElementById('modalQtyDisplay').innerText = '1';
+
       const buttons = document.querySelectorAll('.size-btn');
       buttons.forEach((btn, idx) => {
         if (idx === index) {
@@ -782,21 +774,39 @@
           btn.className = 'size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-gray-700 border-gray-200';
         }
       });
-      updateModalPriceDisplay();
+      updateModalStockAndPrice();
     }
 
-    function adjustModalQty(delta) {
-      const maxStock = currentModalProduct.stock || 999;
-      selectedQty = Math.min(maxStock, Math.max(1, selectedQty + delta));
-      document.getElementById('modalQtyDisplay').innerText = selectedQty;
-      updateModalPriceDisplay();
-    }
+    function updateModalStockAndPrice() {
+      const currentStock = selectedSize ? (selectedSize.stock !== undefined ? selectedSize.stock : 10) : (currentModalProduct.stock !== undefined ? currentModalProduct.stock : 10);
+      const isSoldOut = currentStock <= 0;
+      
+      const stockBadge = document.getElementById('modalStockStatus');
+      const addBtn = document.getElementById('modalAddToCartBtn');
 
-    function updateModalPriceDisplay() {
+      if (isSoldOut) {
+        stockBadge.innerText = 'SOLD OUT';
+        stockBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-600';
+        addBtn.disabled = true;
+        addBtn.className = 'w-full bg-gray-300 text-gray-500 py-3 rounded-xl font-bold text-sm cursor-not-allowed';
+      } else {
+        stockBadge.innerText = `In Stock (${currentStock})`;
+        stockBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-700';
+        addBtn.disabled = false;
+        addBtn.className = 'w-full brand-bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-md transition hover:opacity-90';
+      }
+
       const unitPrice = selectedSize ? selectedSize.price : currentModalProduct.price;
       const total = unitPrice * selectedQty;
       document.getElementById('modalProductPrice').innerText = `${unitPrice} EGP`;
       document.getElementById('modalAddToCartPrice').innerText = `${total} EGP`;
+    }
+
+    function adjustModalQty(delta) {
+      const currentStock = selectedSize ? (selectedSize.stock !== undefined ? selectedSize.stock : 999) : (currentModalProduct.stock !== undefined ? currentModalProduct.stock : 999);
+      selectedQty = Math.min(currentStock, Math.max(1, selectedQty + delta));
+      document.getElementById('modalQtyDisplay').innerText = selectedQty;
+      updateModalStockAndPrice();
     }
 
     function closeProductModal() {
@@ -812,7 +822,8 @@
     }
 
     function addModalItemToCart() {
-      if (currentModalProduct.stock !== undefined && currentModalProduct.stock <= 0) return;
+      const currentStock = selectedSize ? selectedSize.stock : currentModalProduct.stock;
+      if (currentStock !== undefined && currentStock <= 0) return;
 
       const unitPrice = selectedSize ? selectedSize.price : currentModalProduct.price;
       const customText = currentModalProduct.allowCustomText ? document.getElementById('modalCustomTextInput').value : '';
@@ -885,7 +896,7 @@
       }
     }
 
-    // SUBMIT ORDER
+    // SUBMIT ORDER & DEDUCT SPECIFIC SIZE STOCK
     function submitOrder() {
       if (cart.length === 0) {
         alert('Your cart is empty!');
@@ -948,10 +959,18 @@
         }).then(() => console.log('Email dispatched successfully!')).catch(err => console.log('Email dispatch error:', err));
       }
 
+      // Deduct Stock For Specific Size or Fixed Product
       cart.forEach(cItem => {
         const prod = products.find(p => p.id === cItem.productId);
-        if (prod && prod.stock !== undefined) {
-          prod.stock = Math.max(0, prod.stock - cItem.qty);
+        if (prod) {
+          if (cItem.sizeName && prod.sizes && prod.sizes.length > 0) {
+            const sizeObj = prod.sizes.find(s => s.name === cItem.sizeName);
+            if (sizeObj && sizeObj.stock !== undefined) {
+              sizeObj.stock = Math.max(0, sizeObj.stock - cItem.qty);
+            }
+          } else if (prod.stock !== undefined) {
+            prod.stock = Math.max(0, prod.stock - cItem.qty);
+          }
         }
       });
       localStorage.setItem('flora_products', JSON.stringify(products));
@@ -967,7 +986,7 @@
       document.getElementById('orderSuccessModal').classList.add('hidden');
     }
 
-    // ADMIN DASHBOARD & PRODUCT EDITING LOGIC
+    // ADMIN FUNCTIONS
     function openAdminModal() {
       document.getElementById('adminModal').classList.remove('hidden');
     }
@@ -1020,12 +1039,10 @@
       }
     }
 
-    // SAVE OR EDIT PRODUCT WITH MULTI-IMAGE CONVERSION
     function saveProduct() {
       const editId = document.getElementById('editingProductId').value;
       const title = document.getElementById('newProdTitle').value.trim();
       const category = document.getElementById('newProdCategory').value;
-      const stock = parseInt(document.getElementById('newProdStock').value) || 10;
       const desc = document.getElementById('newProdDesc').value.trim();
       const allowCustomText = document.getElementById('newProdCustomText').checked;
       const priceMode = document.querySelector('input[name="priceMode"]:checked').value;
@@ -1038,10 +1055,12 @@
 
       let price = 0;
       let originalPrice = null;
+      let stock = 10;
       let sizes = [];
 
       if (priceMode === 'single') {
         price = parseFloat(document.getElementById('newProdPrice').value);
+        stock = parseInt(document.getElementById('newProdStock').value) || 10;
         const origVal = document.getElementById('newProdOriginalPrice').value.trim();
         originalPrice = origVal ? parseFloat(origVal) : null;
         if (isNaN(price)) {
@@ -1052,17 +1071,21 @@
         const sizesStr = document.getElementById('newProdSizes').value.trim();
         if (sizesStr) {
           sizesStr.split(',').forEach(part => {
-            const [sName, sPrice] = part.split(':');
+            const [sName, sPrice, sStock] = part.split(':');
             if (sName && sPrice) {
-              sizes.push({ name: sName.trim(), price: parseFloat(sPrice.trim()) });
+              sizes.push({
+                name: sName.trim(),
+                price: parseFloat(sPrice.trim()),
+                stock: sStock !== undefined ? parseInt(sStock.trim()) : 10
+              });
             }
           });
         }
         if (sizes.length === 0) {
-          alert('Please enter valid sizes and prices (e.g., Small:150, Medium:200).');
+          alert('Please enter valid sizes, prices, and stock (e.g., Small:150:5, Medium:200:10).');
           return;
         }
-        price = sizes[0].price; // Base price is set to smallest size
+        price = sizes[0].price;
       }
 
       const existingProd = editId ? products.find(p => p.id === editId) : null;
@@ -1080,7 +1103,6 @@
         }
 
         if (editId && existingProd) {
-          // Update Existing Product
           existingProd.title = title;
           existingProd.category = category;
           existingProd.price = price;
@@ -1092,7 +1114,6 @@
           existingProd.description = desc;
           alert('Product updated successfully!');
         } else {
-          // Create New Product
           const newProd = {
             id: 'p_' + Date.now(),
             title: title,
@@ -1145,17 +1166,17 @@
 
       document.getElementById('newProdTitle').value = prod.title;
       document.getElementById('newProdCategory').value = prod.category;
-      document.getElementById('newProdStock').value = prod.stock !== undefined ? prod.stock : 10;
       document.getElementById('newProdDesc').value = prod.description || '';
       document.getElementById('newProdCustomText').checked = !!prod.allowCustomText;
 
       if (prod.sizes && prod.sizes.length > 0) {
         document.querySelector('input[name="priceMode"][value="sizes"]').checked = true;
-        document.getElementById('newProdSizes').value = prod.sizes.map(s => `${s.name}:${s.price}`).join(', ');
+        document.getElementById('newProdSizes').value = prod.sizes.map(s => `${s.name}:${s.price}:${s.stock !== undefined ? s.stock : 10}`).join(', ');
       } else {
         document.querySelector('input[name="priceMode"][value="single"]').checked = true;
         document.getElementById('newProdPrice').value = prod.price;
         document.getElementById('newProdOriginalPrice').value = prod.originalPrice || '';
+        document.getElementById('newProdStock').value = prod.stock !== undefined ? prod.stock : 10;
       }
 
       togglePricingModeUI();
@@ -1187,13 +1208,20 @@
         const displayImg = (p.images && p.images.length > 0) ? p.images[0] : (p.image || '');
         const imgCount = (p.images && p.images.length > 0) ? p.images.length : 1;
         
+        let stockDesc = '';
+        if (p.sizes && p.sizes.length > 0) {
+          stockDesc = p.sizes.map(s => `${s.name}:${s.stock !== undefined ? s.stock : 10}`).join(', ');
+        } else {
+          stockDesc = `${p.stock !== undefined ? p.stock : 10}`;
+        }
+
         return `
         <div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg text-xs">
           <div class="flex items-center space-x-2">
             <img src="${displayImg}" class="w-8 h-8 rounded object-cover">
             <div>
               <p class="font-bold text-gray-800">${p.title}</p>
-              <p class="text-gray-500">${p.price} EGP ${p.originalPrice ? '(Was ' + p.originalPrice + ' EGP)' : ''} • Stock: ${p.stock !== undefined ? p.stock : 10} • Photos: ${imgCount}</p>
+              <p class="text-gray-500">${p.price} EGP • Stock: [${stockDesc}] • Photos: ${imgCount}</p>
             </div>
           </div>
           <div class="flex items-center space-x-2">
