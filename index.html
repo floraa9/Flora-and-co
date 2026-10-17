@@ -6,43 +6,23 @@
   <title>Flora & Co. — Handcrafted Stationery & Lifestyle</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#fff0f3',
-              100: '#ffe3e8',
-              200: '#ffccd5',
-              300: '#ffb3c1',
-              400: '#ff85a1',
-              500: '#f72585',
-              pastelYellow: '#fef08a',
-              softYellow: '#fef9c3',
-              pastelPink: '#fbcfe8',
-              softPink: '#fde2e4',
-              accent: '#d97706'
-            }
-          },
-          fontFamily: {
-            serif: ['"Playfair Display"', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'sans-serif']
-          }
-        }
-      }
+  <style id="customDynamicStyles">
+    :root {
+      --primary-color: #db2777;
+      --bg-tint: #fffdfa;
     }
-  </script>
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fffdfa; color: #2d3748; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-tint); color: #2d3748; }
     .font-serif { font-family: 'Playfair Display', serif; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .brand-bg-primary { background-color: var(--primary-color); }
+    .brand-text-primary { color: var(--primary-color); }
+    .brand-border-primary { border-color: var(--primary-color); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- Announcement Banner -->
+  <!-- Top Announcement Banner -->
   <div id="announcementBanner" class="bg-amber-100 text-amber-900 text-xs sm:text-sm py-2 px-4 text-center font-medium border-b border-amber-200">
     🌸 Handmade with love — Free shipping on orders over 500 EGP!
   </div>
@@ -51,9 +31,8 @@
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100 transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
       
-      <!-- Brand Logo -->
       <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('all')">
-        <div class="w-10 h-10 rounded-full bg-pink-100 border border-pink-200 flex items-center justify-center text-pink-600 font-serif font-bold text-xl shadow-sm">
+        <div class="w-10 h-10 rounded-full bg-pink-100 border border-pink-200 flex items-center justify-center brand-text-primary font-serif font-bold text-xl shadow-sm">
           F
         </div>
         <div>
@@ -62,7 +41,6 @@
         </div>
       </div>
 
-      <!-- Action Icons -->
       <div class="flex items-center space-x-3 sm:space-x-5">
         <button onclick="openAdminModal()" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-700 transition flex items-center space-x-1 border border-gray-200">
           <span>⚙️</span>
@@ -73,32 +51,28 @@
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
           </svg>
-          <span id="cartCountBadge" class="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">0</span>
+          <span id="cartCountBadge" class="absolute -top-1 -right-1 brand-bg-primary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">0</span>
         </button>
       </div>
     </div>
 
-    <!-- Category Nav Bar -->
     <nav class="bg-pink-50/60 border-t border-pink-100/50 py-2.5 px-4 overflow-x-auto hide-scrollbar">
-      <div id="categoryNavContainer" class="max-w-7xl mx-auto flex items-center space-x-2 sm:space-x-4 min-w-max">
-        <!-- Dynamic Categories Rendered Here -->
-      </div>
+      <div id="categoryNavContainer" class="max-w-7xl mx-auto flex items-center space-x-2 sm:space-x-4 min-w-max"></div>
     </nav>
   </header>
 
-  <!-- Hero Section -->
-  <section class="bg-gradient-to-b from-pink-50/80 via-yellow-50/40 to-transparent py-10 sm:py-16 px-4 text-center border-b border-pink-100/40">
-    <div class="max-w-3xl mx-auto space-y-4">
-      <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider uppercase bg-pink-100 text-pink-700 rounded-full">New Collection</span>
-      <h2 class="font-serif text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">Handmade Pouches, Stationery & Accessories</h2>
-      <p class="text-gray-600 text-sm sm:text-base max-w-xl mx-auto">Thoughtfully sewn make-up pouches, book sleeves, bookmarks, printed notebooks, and planner stickers created to brighten your everyday routines.</p>
+  <!-- Hero Banner with Custom Image & Text -->
+  <section class="relative bg-gradient-to-b from-pink-50/80 via-yellow-50/40 to-transparent py-10 sm:py-16 px-4 text-center border-b border-pink-100/40 overflow-hidden">
+    <div id="heroBannerBg" class="absolute inset-0 bg-cover bg-center opacity-20 hidden"></div>
+    <div class="relative max-w-3xl mx-auto space-y-4">
+      <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider uppercase bg-pink-100 brand-text-primary rounded-full">Handcrafted with Care</span>
+      <h2 id="heroTitleText" class="font-serif text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">Handmade Pouches, Stationery & Accessories</h2>
+      <p id="heroSubtitleText" class="text-gray-600 text-sm sm:text-base max-w-xl mx-auto">Thoughtfully sewn make-up pouches, book sleeves, bookmarks, printed notebooks, and planner stickers created to brighten your everyday routines.</p>
     </div>
   </section>
 
-  <!-- Main Storefront Content -->
+  <!-- Store Catalog -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow w-full">
-    
-    <!-- Filter & Search Bar -->
     <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
       <div class="w-full sm:w-72 relative">
         <input type="text" id="searchInput" oninput="renderStorefront()" placeholder="Search products..." class="w-full pl-9 pr-4 py-2 rounded-xl border border-pink-200 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 bg-white">
@@ -107,10 +81,7 @@
       <p id="productCountText" class="text-xs text-gray-500 font-medium"></p>
     </div>
 
-    <!-- Dynamic Category Sections / Product Grid -->
-    <div id="storeSectionsContainer" class="space-y-12">
-      <!-- Dynamically generated sections will render here -->
-    </div>
+    <div id="storeSectionsContainer" class="space-y-12"></div>
   </main>
 
   <!-- Footer -->
@@ -122,7 +93,7 @@
     </div>
   </footer>
 
-  <!-- PRODUCT DETAIL / CUSTOMIZATION MODAL -->
+  <!-- PRODUCT DETAIL MODAL -->
   <div id="productModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-pink-100 max-h-[90vh] flex flex-col">
       <div class="relative bg-pink-50 h-60 sm:h-72 flex items-center justify-center overflow-hidden">
@@ -131,26 +102,29 @@
       </div>
       <div class="p-6 overflow-y-auto space-y-4 flex-grow">
         <div>
-          <span id="modalProductCategory" class="text-[10px] font-bold tracking-wider uppercase text-pink-600 bg-pink-100 px-2.5 py-1 rounded-full"></span>
+          <div class="flex justify-between items-center">
+            <span id="modalProductCategory" class="text-[10px] font-bold tracking-wider uppercase text-pink-600 bg-pink-100 px-2.5 py-1 rounded-full"></span>
+            <span id="modalStockStatus" class="text-xs font-bold px-2 py-0.5 rounded"></span>
+          </div>
           <h3 id="modalProductTitle" class="font-serif text-2xl font-bold text-gray-900 mt-2"></h3>
-          <p id="modalProductPrice" class="text-xl font-bold text-pink-600 mt-1"></p>
+          <p id="modalProductPrice" class="text-xl font-bold brand-text-primary mt-1"></p>
         </div>
 
         <p id="modalProductDesc" class="text-sm text-gray-600 leading-relaxed"></p>
 
-        <!-- Size Variant Selection -->
+        <!-- Sizes -->
         <div id="modalSizeContainer" class="space-y-2 hidden">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Select Size</label>
           <div id="modalSizeOptions" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <!-- Custom Embroidery / Text Option -->
+        <!-- Custom Embroidery Text -->
         <div id="modalCustomTextContainer" class="space-y-2 hidden">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Custom Embroidery / Name Monogram</label>
           <input type="text" id="modalCustomTextInput" placeholder="Enter name or initials..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
         </div>
 
-        <!-- Quantity Input -->
+        <!-- Quantity Selection -->
         <div class="space-y-2">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Quantity</label>
           <div class="flex items-center space-x-3">
@@ -162,7 +136,7 @@
       </div>
 
       <div class="p-4 bg-gray-50 border-t border-gray-100">
-        <button onclick="addModalItemToCart()" class="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-bold text-sm shadow-md transition">
+        <button id="modalAddToCartBtn" onclick="addModalItemToCart()" class="w-full brand-bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-md transition hover:opacity-90">
           Add to Order • <span id="modalAddToCartPrice"></span>
         </button>
       </div>
@@ -179,12 +153,9 @@
         <button onclick="toggleCartDrawer()" class="text-gray-500 hover:text-gray-800 p-1">✕</button>
       </div>
 
-      <!-- Cart Items List -->
-      <div id="cartItemsList" class="p-4 overflow-y-auto space-y-4 flex-grow">
-        <!-- Cart Items Rendered Here -->
-      </div>
+      <div id="cartItemsList" class="p-4 overflow-y-auto space-y-4 flex-grow"></div>
 
-      <!-- Checkout Details Form -->
+      <!-- Checkout Details -->
       <div id="cartCheckoutForm" class="p-4 bg-pink-50/50 border-t border-pink-100 space-y-3 overflow-y-auto max-h-[50vh]">
         <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">Shipping Details</h4>
         
@@ -203,164 +174,187 @@
           </select>
         </div>
 
-        <textarea id="custAddress" rows="2" placeholder="Full Delivery Address (Street, Building, Apartment) *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white"></textarea>
+        <textarea id="custAddress" rows="2" placeholder="Full Delivery Address *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white"></textarea>
 
-        <!-- InstaPay Details Notice -->
         <div id="instaPayNotice" class="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-[11px] text-amber-900 hidden space-y-1">
           <p class="font-bold">📱 InstaPay Instructions:</p>
           <p>Send payment to handle: <span id="displayInstaHandle" class="font-mono font-bold bg-amber-100 px-1 rounded">flora@instapay</span></p>
-          <p class="text-[10px] text-amber-700">Please attach a screenshot of your payment transfer when sending your order on WhatsApp!</p>
         </div>
 
-        <!-- Order Summary & Place Button -->
         <div class="pt-2 border-t border-gray-200 space-y-1">
-          <div class="flex justify-between text-xs text-gray-600">
-            <span>Subtotal:</span>
-            <span id="cartSubtotalText">0 EGP</span>
-          </div>
-          <div class="flex justify-between text-xs text-gray-600">
-            <span>Shipping:</span>
-            <span id="cartShippingText">50 EGP</span>
-          </div>
-          <div class="flex justify-between text-sm font-bold text-pink-700 pt-1">
-            <span>Total:</span>
-            <span id="cartTotalText">50 EGP</span>
-          </div>
+          <div class="flex justify-between text-xs text-gray-600"><span>Subtotal:</span><span id="cartSubtotalText">0 EGP</span></div>
+          <div class="flex justify-between text-xs text-gray-600"><span>Shipping:</span><span id="cartShippingText">50 EGP</span></div>
+          <div class="flex justify-between text-sm font-bold brand-text-primary pt-1"><span>Total:</span><span id="cartTotalText">50 EGP</span></div>
 
-          <button onclick="submitOrder()" id="checkoutSubmitBtn" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl text-sm shadow-md mt-2 transition">
-            Place Order via WhatsApp
+          <button onclick="submitOrder()" id="checkoutSubmitBtn" class="w-full brand-bg-primary text-white font-bold py-3 rounded-xl text-sm shadow-md mt-2 transition hover:opacity-90">
+            Place Order
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ORDER SUCCESS CONFIRMATION MODAL -->
+  <!-- ORDER SUCCESS MODAL -->
   <div id="orderSuccessModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-pink-100">
-      <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-3xl">
-        ✓
-      </div>
-      <h3 class="font-serif text-2xl font-bold text-gray-900">Order Submitted!</h3>
+      <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-3xl">✓</div>
+      <h3 class="font-serif text-2xl font-bold text-gray-900">Order Placed!</h3>
       <p class="text-xs text-gray-600 leading-relaxed">Thank you for ordering from Flora & Co.! What happens next?</p>
       
       <div class="bg-pink-50 p-3 rounded-xl text-left text-xs space-y-2 border border-pink-100">
         <p class="font-bold text-pink-800">📋 Next Steps:</p>
-        <p>1. If WhatsApp opened, click **Send** to send your order details to us.</p>
-        <p>2. For **InstaPay**, share your payment screenshot in the chat.</p>
-        <p>3. We will confirm your order details and delivery timeframe shortly!</p>
+        <p>1. If WhatsApp opened, please send the pre-filled order message.</p>
+        <p>2. For InstaPay orders, please send your payment transfer screenshot.</p>
+        <p>3. We will confirm your delivery details shortly!</p>
       </div>
 
-      <button onclick="closeSuccessModal()" class="w-full bg-pink-600 text-white font-bold py-2.5 rounded-xl text-xs">Back to Store</button>
+      <button onclick="closeSuccessModal()" class="w-full brand-bg-primary text-white font-bold py-2.5 rounded-xl text-xs">Back to Store</button>
     </div>
   </div>
 
-  <!-- ADMIN LOGIN & MANAGEMENT MODAL -->
+  <!-- ADMIN PANEL MODAL -->
   <div id="adminModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-pink-100">
       
       <div class="p-4 bg-gray-900 text-white flex justify-between items-center">
         <h3 class="font-serif font-bold text-lg flex items-center space-x-2">
-          <span>⚙️ Flora & Co. Admin Panel</span>
+          <span>⚙️ Flora & Co. Admin Dashboard</span>
         </h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white">✕</button>
       </div>
 
-      <!-- Admin Password Login View -->
       <div id="adminAuthSection" class="p-8 text-center space-y-4">
-        <p class="text-sm text-gray-600">Enter your admin password to manage products and store settings:</p>
-        <input type="password" id="adminPasswordInput" placeholder="Enter Admin Password" class="px-4 py-2 border rounded-xl w-64 text-center text-sm focus:ring-2 focus:ring-pink-300">
+        <p class="text-sm text-gray-600">Enter password to access admin dashboard:</p>
+        <input type="password" id="adminPasswordInput" placeholder="Password" class="px-4 py-2 border rounded-xl w-64 text-center text-sm focus:ring-2 focus:ring-pink-300">
         <div>
-          <button onclick="authenticateAdmin()" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-xl text-sm font-bold shadow">Unlock Panel</button>
+          <button onclick="authenticateAdmin()" class="brand-bg-primary text-white px-6 py-2 rounded-xl text-sm font-bold shadow">Unlock</button>
         </div>
       </div>
 
-      <!-- Admin Dashboard Controls (Visible upon Auth) -->
       <div id="adminDashboardSection" class="p-6 overflow-y-auto space-y-8 hidden flex-grow">
         
-        <!-- Tab Navigation -->
         <div class="flex border-b border-gray-200 text-xs font-bold">
           <button onclick="switchAdminTab('products')" id="tabBtnProducts" class="py-2 px-4 border-b-2 border-pink-600 text-pink-600">Products</button>
-          <button onclick="switchAdminTab('categories')" id="tabBtnCategories" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Categories & Layout</button>
-          <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Store Settings</button>
+          <button onclick="switchAdminTab('categories')" id="tabBtnCategories" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Categories</button>
+          <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Store & Colors</button>
         </div>
 
-        <!-- 1. PRODUCTS MANAGEMENT -->
+        <!-- PRODUCTS TAB -->
         <div id="adminTabProducts" class="space-y-6">
           <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-100 space-y-3">
             <h4 class="font-bold text-sm text-pink-800">Add New Product</h4>
             
             <div class="grid grid-cols-2 gap-3">
               <input type="text" id="newProdTitle" placeholder="Product Title *" class="px-3 py-2 border rounded-lg text-xs bg-white">
-              <select id="newProdCategory" class="px-3 py-2 border rounded-lg text-xs bg-white">
-                <!-- Dynamically populated categories -->
-              </select>
+              <select id="newProdCategory" class="px-3 py-2 border rounded-lg text-xs bg-white"></select>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-              <input type="number" id="newProdPrice" placeholder="Base Price (EGP) *" class="px-3 py-2 border rounded-lg text-xs bg-white">
-              <input type="text" id="newProdSizes" placeholder="Sizes (e.g. Small:150, Medium:200)" class="px-3 py-2 border rounded-lg text-xs bg-white">
+            <div class="grid grid-cols-3 gap-3">
+              <input type="number" id="newProdPrice" placeholder="Price (EGP) *" class="px-3 py-2 border rounded-lg text-xs bg-white">
+              <input type="number" id="newProdStock" placeholder="Inventory Stock *" value="10" class="px-3 py-2 border rounded-lg text-xs bg-white">
+              <input type="text" id="newProdSizes" placeholder="Sizes (e.g. Small:150, Large:200)" class="px-3 py-2 border rounded-lg text-xs bg-white">
             </div>
 
             <div>
-              <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Upload Product Image</label>
-              <input type="file" id="newProdImageFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200">
+              <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Upload Product Photo</label>
+              <input type="file" id="newProdImageFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700">
             </div>
 
-            <textarea id="newProdDesc" rows="2" placeholder="Product description..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
+            <textarea id="newProdDesc" rows="2" placeholder="Description..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
 
             <div class="flex items-center space-x-2">
               <input type="checkbox" id="newProdCustomText" class="rounded text-pink-600">
-              <label for="newProdCustomText" class="text-xs text-gray-700">Allow custom embroidery / text monogram option</label>
+              <label for="newProdCustomText" class="text-xs text-gray-700">Allow custom embroidery / text monogram</label>
             </div>
 
-            <button onclick="addNewProduct()" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">Save Product</button>
+            <button onclick="addNewProduct()" class="brand-bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold shadow">Save Product</button>
           </div>
 
-          <!-- Existing Products Table -->
           <div>
-            <h4 class="font-bold text-xs uppercase tracking-wider text-gray-700 mb-3">Existing Catalog</h4>
+            <h4 class="font-bold text-xs uppercase tracking-wider text-gray-700 mb-3">Product Catalog</h4>
             <div id="adminProductsList" class="space-y-2"></div>
           </div>
         </div>
 
-        <!-- 2. CATEGORIES MANAGEMENT -->
+        <!-- CATEGORIES TAB -->
         <div id="adminTabCategories" class="space-y-4 hidden">
           <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
-            <h4 class="font-bold text-sm text-gray-800">Add New Category / Section</h4>
+            <h4 class="font-bold text-sm text-gray-800">Add New Category Section</h4>
             <div class="flex space-x-2">
-              <input type="text" id="newCatName" placeholder="Category Name (e.g., Book Sleeves)" class="flex-grow px-3 py-2 border rounded-lg text-xs bg-white">
+              <input type="text" id="newCatName" placeholder="Category Name" class="flex-grow px-3 py-2 border rounded-lg text-xs bg-white">
               <button onclick="addNewCategory()" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-xs font-bold">Add</button>
             </div>
           </div>
-
           <div id="adminCategoriesList" class="space-y-2"></div>
         </div>
 
-        <!-- 3. STORE SETTINGS -->
+        <!-- STORE SETTINGS TAB -->
         <div id="adminTabSettings" class="space-y-4 hidden">
-          <div class="grid grid-cols-2 gap-3">
+          
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Color Palette Customization</h4>
+          <div class="grid grid-cols-2 gap-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">WhatsApp Business Number</label>
-              <input type="text" id="cfgWhatsapp" placeholder="e.g. 201000000000" class="w-full px-3 py-2 border rounded-lg text-xs">
+              <label class="block text-xs font-bold text-gray-700 mb-1">Primary Theme Color</label>
+              <input type="color" id="cfgPrimaryColor" value="#db2777" class="w-full h-8 rounded border p-1 cursor-pointer">
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">InstaPay Handle</label>
-              <input type="text" id="cfgInstaPay" placeholder="e.g. flora@instapay" class="w-full px-3 py-2 border rounded-lg text-xs">
+              <label class="block text-xs font-bold text-gray-700 mb-1">Background Tint Color</label>
+              <input type="color" id="cfgBgTint" value="#fffdfa" class="w-full h-8 rounded border p-1 cursor-pointer">
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Flat Shipping Rate (EGP)</label>
-            <input type="number" id="cfgShippingRate" class="w-full px-3 py-2 border rounded-lg text-xs">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">2. Order Notification Channel</h4>
+          <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
+            <label class="block text-xs font-bold text-gray-700">Notify store owner via:</label>
+            <select id="cfgNotificationRoute" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
+              <option value="whatsapp">WhatsApp Only</option>
+              <option value="email">Email Only</option>
+              <option value="both">Both (WhatsApp + Email)</option>
+            </select>
+            <input type="email" id="cfgNotificationEmail" placeholder="Store Owner Email (e.g. hello@floraandco.com)" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            <input type="url" id="cfgFormspreeEndpoint" placeholder="Formspree Endpoint URL (e.g. https://formspree.io/f/xbjnqpkz)" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
           </div>
 
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Announcement Banner Text</label>
-            <input type="text" id="cfgBanner" class="w-full px-3 py-2 border rounded-lg text-xs">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">3. Banner & Store Information</h4>
+          <div class="space-y-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                <input type="text" id="cfgWhatsapp" placeholder="201000000000" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">InstaPay Handle</label>
+                <input type="text" id="cfgInstaPay" placeholder="flora@instapay" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Top Announcement Text</label>
+              <input type="text" id="cfgBanner" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Hero Title</label>
+              <input type="text" id="cfgHeroTitle" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Hero Subtitle Text</label>
+              <textarea id="cfgHeroSubtitle" rows="2" class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Upload Hero Banner Background Photo</label>
+              <input type="file" id="cfgHeroBgFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-pink-100 file:text-pink-700">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Flat Shipping Rate (EGP)</label>
+              <input type="number" id="cfgShippingRate" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            </div>
           </div>
 
-          <button onclick="saveStoreSettings()" class="bg-pink-600 text-white font-bold px-4 py-2 rounded-xl text-xs">Save Settings</button>
+          <button onclick="saveStoreSettings()" class="brand-bg-primary text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow">Save All Settings</button>
         </div>
 
       </div>
@@ -368,7 +362,6 @@
   </div>
 
   <script>
-    // INITIAL DEFAULT DATA
     const DEFAULT_CATEGORIES = [
       { id: 'pouches', name: 'Pouches & Sleeves' },
       { id: 'stationery', name: 'Printed Stationery' },
@@ -382,80 +375,98 @@
         title: 'Botanical Floral Sewn Make-up Pouch',
         category: 'pouches',
         price: 250,
-        sizes: [ { name: 'Small', price: 200 }, { name: 'Medium', price: 250 }, { name: 'Large', price: 300 } ],
+        stock: 5,
+        sizes: [ { name: 'Small', price: 200 }, { name: 'Medium', price: 250 } ],
         allowCustomText: true,
         image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=600',
-        description: 'Handcrafted sewn make-up pouch with floral cotton lining and durable zipper. Ideal for cosmetics or stationary tools.'
+        description: 'Handcrafted sewn make-up pouch with floral cotton lining and durable zipper.'
       },
       {
         id: 'p2',
         title: 'Pastel Garden Weekly Planner Notepad',
         category: 'stationery',
         price: 120,
+        stock: 0,
         sizes: [],
         allowCustomText: false,
         image: 'https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&q=80&w=600',
-        description: '50 tear-off sheets printed locally on premium 100gsm paper. Perfect for structuring your daily goals.'
-      },
-      {
-        id: 'p3',
-        title: 'Embroidered Wildflower Fabric Bookmark',
-        category: 'bookmarks',
-        price: 80,
-        sizes: [],
-        allowCustomText: true,
-        image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600',
-        description: 'Soft linen bookmark sewn with embroidered detail. Gentle on your book pages.'
+        description: '50 tear-off sheets printed locally on premium 100gsm paper.'
       }
     ];
 
-    // APPLICATION STATE
     let categories = JSON.parse(localStorage.getItem('flora_categories')) || DEFAULT_CATEGORIES;
     let products = JSON.parse(localStorage.getItem('flora_products')) || DEFAULT_PRODUCTS;
     let settings = JSON.parse(localStorage.getItem('flora_settings')) || {
+      primaryColor: '#db2777',
+      bgTint: '#fffdfa',
+      notificationRoute: 'whatsapp',
+      notificationEmail: 'hello@floraandco.com',
+      formspreeEndpoint: '',
       whatsapp: '201000000000',
       instapay: 'flora@instapay',
       shippingRate: 50,
-      banner: '🌸 Handmade with love — Free shipping on orders over 500 EGP!'
+      banner: '🌸 Handmade with love — Free shipping on orders over 500 EGP!',
+      heroTitle: 'Handmade Pouches, Stationery & Accessories',
+      heroSubtitle: 'Thoughtfully sewn make-up pouches, book sleeves, bookmarks, printed notebooks, and planner stickers.',
+      heroBg: ''
     };
+
     let cart = [];
     let activeCategoryFilter = 'all';
     let currentModalProduct = null;
     let selectedSize = null;
     let selectedQty = 1;
 
-    // INIT STOREFRONT
     window.addEventListener('DOMContentLoaded', () => {
+      applySettings();
       renderCategoryNav();
       renderStorefront();
-      applySettings();
     });
 
     function applySettings() {
+      document.documentElement.style.setProperty('--primary-color', settings.primaryColor || '#db2777');
+      document.documentElement.style.setProperty('--bg-tint', settings.bgTint || '#fffdfa');
+
       document.getElementById('announcementBanner').innerText = settings.banner;
+      document.getElementById('heroTitleText').innerText = settings.heroTitle || 'Handmade Pouches, Stationery & Accessories';
+      document.getElementById('heroSubtitleText').innerText = settings.heroSubtitle || '';
       document.getElementById('displayInstaHandle').innerText = settings.instapay;
+
+      const heroBg = document.getElementById('heroBannerBg');
+      if (settings.heroBg) {
+        heroBg.style.backgroundImage = `url('${settings.heroBg}')`;
+        heroBg.classList.remove('hidden');
+      } else {
+        heroBg.classList.add('hidden');
+      }
+
+      document.getElementById('cfgPrimaryColor').value = settings.primaryColor || '#db2777';
+      document.getElementById('cfgBgTint').value = settings.bgTint || '#fffdfa';
+      document.getElementById('cfgNotificationRoute').value = settings.notificationRoute || 'whatsapp';
+      document.getElementById('cfgNotificationEmail').value = settings.notificationEmail || '';
+      document.getElementById('cfgFormspreeEndpoint').value = settings.formspreeEndpoint || '';
       document.getElementById('cfgWhatsapp').value = settings.whatsapp;
       document.getElementById('cfgInstaPay').value = settings.instapay;
       document.getElementById('cfgShippingRate').value = settings.shippingRate;
       document.getElementById('cfgBanner').value = settings.banner;
+      document.getElementById('cfgHeroTitle').value = settings.heroTitle || '';
+      document.getElementById('cfgHeroSubtitle').value = settings.heroSubtitle || '';
     }
 
-    // RENDER CATEGORY NAVIGATION
     function renderCategoryNav() {
       const container = document.getElementById('categoryNavContainer');
       const adminCatSelect = document.getElementById('newProdCategory');
       
       let navHtml = `
-        <button onclick="filterCategory('all')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${activeCategoryFilter === 'all' ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-gray-600 hover:bg-pink-100'}">
+        <button onclick="filterCategory('all')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${activeCategoryFilter === 'all' ? 'brand-bg-primary text-white shadow-sm' : 'bg-white text-gray-600 hover:bg-pink-100'}">
           All Products
         </button>
       `;
 
       let adminOptionsHtml = '';
-
       categories.forEach(cat => {
         navHtml += `
-          <button onclick="filterCategory('${cat.id}')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${activeCategoryFilter === cat.id ? 'bg-pink-600 text-white shadow-sm' : 'bg-white text-gray-600 hover:bg-pink-100'}">
+          <button onclick="filterCategory('${cat.id}')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${activeCategoryFilter === cat.id ? 'brand-bg-primary text-white shadow-sm' : 'bg-white text-gray-600 hover:bg-pink-100'}">
             ${cat.name}
           </button>
         `;
@@ -472,7 +483,6 @@
       renderStorefront();
     }
 
-    // RENDER STOREFRONT SECTIONS & PRODUCTS
     function renderStorefront() {
       const container = document.getElementById('storeSectionsContainer');
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -486,16 +496,10 @@
       document.getElementById('productCountText').innerText = `Showing ${filtered.length} product(s)`;
 
       if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-12 text-gray-400">
-            <p class="text-3xl mb-2">🌸</p>
-            <p class="text-sm">No items found matching your search.</p>
-          </div>
-        `;
+        container.innerHTML = `<div class="text-center py-12 text-gray-400"><p class="text-3xl mb-2">🌸</p><p class="text-sm">No items found.</p></div>`;
         return;
       }
 
-      // Group products by category sections
       let html = '';
       const displayCategories = activeCategoryFilter === 'all' ? categories : categories.filter(c => c.id === activeCategoryFilter);
 
@@ -511,11 +515,14 @@
             </div>
             
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              ${catProducts.map(p => `
-                <div onclick="openProductModal('${p.id}')" class="bg-white rounded-2xl border border-pink-100/60 overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group">
+              ${catProducts.map(p => {
+                const isSoldOut = p.stock !== undefined && p.stock <= 0;
+                return `
+                <div onclick="openProductModal('${p.id}')" class="bg-white rounded-2xl border border-pink-100/60 overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between group relative">
+                  ${isSoldOut ? `<span class="absolute top-2 right-2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow z-10">SOLD OUT</span>` : ''}
                   <div>
                     <div class="relative bg-pink-50 aspect-square overflow-hidden">
-                      <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                      <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300 ${isSoldOut ? 'opacity-60' : ''}">
                     </div>
                     <div class="p-3 sm:p-4 space-y-1">
                       <h4 class="font-bold text-xs sm:text-sm text-gray-800 line-clamp-2">${p.title}</h4>
@@ -523,11 +530,11 @@
                     </div>
                   </div>
                   <div class="p-3 sm:p-4 pt-0 flex items-center justify-between">
-                    <span class="font-bold text-sm text-pink-600">${p.price} EGP</span>
-                    <span class="text-[10px] bg-pink-50 text-pink-700 px-2 py-1 rounded-full font-semibold">View</span>
+                    <span class="font-bold text-sm brand-text-primary">${p.price} EGP</span>
+                    <span class="text-[10px] bg-pink-50 text-pink-700 px-2 py-1 rounded-full font-semibold">${isSoldOut ? 'Out of Stock' : 'View'}</span>
                   </div>
                 </div>
-              `).join('')}
+              `}).join('')}
             </div>
           </div>
         `;
@@ -536,7 +543,6 @@
       container.innerHTML = html;
     }
 
-    // PRODUCT MODAL FUNCTIONS
     function openProductModal(productId) {
       currentModalProduct = products.find(p => p.id === productId);
       if (!currentModalProduct) return;
@@ -547,10 +553,25 @@
       document.getElementById('modalProductTitle').innerText = currentModalProduct.title;
       document.getElementById('modalProductDesc').innerText = currentModalProduct.description;
       
+      const isSoldOut = currentModalProduct.stock !== undefined && currentModalProduct.stock <= 0;
+      const stockBadge = document.getElementById('modalStockStatus');
+      const addBtn = document.getElementById('modalAddToCartBtn');
+
+      if (isSoldOut) {
+        stockBadge.innerText = 'SOLD OUT';
+        stockBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-red-100 text-red-600';
+        addBtn.disabled = true;
+        addBtn.className = 'w-full bg-gray-300 text-gray-500 py-3 rounded-xl font-bold text-sm cursor-not-allowed';
+      } else {
+        stockBadge.innerText = `In Stock (${currentModalProduct.stock || 10})`;
+        stockBadge.className = 'text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-700';
+        addBtn.disabled = false;
+        addBtn.className = 'w-full brand-bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-md transition hover:opacity-90';
+      }
+
       const catObj = categories.find(c => c.id === currentModalProduct.category);
       document.getElementById('modalProductCategory').innerText = catObj ? catObj.name : 'Handmade';
 
-      // Custom Text Option
       const customTextContainer = document.getElementById('modalCustomTextContainer');
       if (currentModalProduct.allowCustomText) {
         customTextContainer.classList.remove('hidden');
@@ -559,14 +580,13 @@
         customTextContainer.classList.add('hidden');
       }
 
-      // Sizes
       const sizeContainer = document.getElementById('modalSizeContainer');
       const sizeOptions = document.getElementById('modalSizeOptions');
       if (currentModalProduct.sizes && currentModalProduct.sizes.length > 0) {
         sizeContainer.classList.remove('hidden');
         selectedSize = currentModalProduct.sizes[0];
         sizeOptions.innerHTML = currentModalProduct.sizes.map((s, idx) => `
-          <button onclick="selectModalSize(${idx})" class="size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold ${idx === 0 ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-gray-700 border-gray-200'}">
+          <button onclick="selectModalSize(${idx})" class="size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold ${idx === 0 ? 'brand-bg-primary text-white border-transparent' : 'bg-white text-gray-700 border-gray-200'}">
             ${s.name} (${s.price} EGP)
           </button>
         `).join('');
@@ -584,7 +604,7 @@
       const buttons = document.querySelectorAll('.size-btn');
       buttons.forEach((btn, idx) => {
         if (idx === index) {
-          btn.className = 'size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold bg-pink-600 text-white border-pink-600';
+          btn.className = 'size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold brand-bg-primary text-white border-transparent';
         } else {
           btn.className = 'size-btn border px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-gray-700 border-gray-200';
         }
@@ -593,7 +613,8 @@
     }
 
     function adjustModalQty(delta) {
-      selectedQty = Math.max(1, selectedQty + delta);
+      const maxStock = currentModalProduct.stock || 999;
+      selectedQty = Math.min(maxStock, Math.max(1, selectedQty + delta));
       document.getElementById('modalQtyDisplay').innerText = selectedQty;
       updateModalPriceDisplay();
     }
@@ -610,6 +631,8 @@
     }
 
     function addModalItemToCart() {
+      if (currentModalProduct.stock !== undefined && currentModalProduct.stock <= 0) return;
+
       const unitPrice = selectedSize ? selectedSize.price : currentModalProduct.price;
       const customText = currentModalProduct.allowCustomText ? document.getElementById('modalCustomTextInput').value : '';
 
@@ -628,10 +651,8 @@
       toggleCartDrawer();
     }
 
-    // CART DRAWER FUNCTIONS
     function toggleCartDrawer() {
-      const drawer = document.getElementById('cartDrawer');
-      drawer.classList.toggle('hidden');
+      document.getElementById('cartDrawer').classList.toggle('hidden');
     }
 
     function updateCartUI() {
@@ -642,12 +663,7 @@
       countBadge.innerText = totalItems;
 
       if (cart.length === 0) {
-        itemsList.innerHTML = `
-          <div class="text-center py-12 text-gray-400">
-            <p class="text-3xl mb-2">🛍️</p>
-            <p class="text-xs">Your shopping bag is empty.</p>
-          </div>
-        `;
+        itemsList.innerHTML = `<div class="text-center py-12 text-gray-400"><p class="text-3xl mb-2">🛍️</p><p class="text-xs">Your shopping bag is empty.</p></div>`;
       } else {
         itemsList.innerHTML = cart.map((item, index) => `
           <div class="flex items-center space-x-3 bg-white p-2.5 rounded-xl border border-pink-100 shadow-sm">
@@ -656,14 +672,13 @@
               <h5 class="font-bold text-gray-800">${item.title}</h5>
               ${item.sizeName ? `<p class="text-gray-500">Size: ${item.sizeName}</p>` : ''}
               ${item.customText ? `<p class="text-pink-600 italic">"Monogram: ${item.customText}"</p>` : ''}
-              <p class="font-bold text-pink-600 mt-0.5">${item.price} EGP × ${item.qty}</p>
+              <p class="font-bold brand-text-primary mt-0.5">${item.price} EGP × ${item.qty}</p>
             </div>
             <button onclick="removeCartItem(${index})" class="text-gray-400 hover:text-red-500 text-sm px-1">✕</button>
           </div>
         `).join('');
       }
 
-      // Calculations
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const shipping = subtotal > 0 ? settings.shippingRate : 0;
       const total = subtotal + shipping;
@@ -688,7 +703,7 @@
       }
     }
 
-    // SUBMIT ORDER VIA WHATSAPP
+    // SUBMIT ORDER
     function submitOrder() {
       if (cart.length === 0) {
         alert('Your cart is empty!');
@@ -710,7 +725,6 @@
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const total = subtotal + settings.shippingRate;
 
-      // Construct WhatsApp Message
       let msg = `🌸 *NEW ORDER — FLORA & CO.*\n\n`;
       msg += `*Customer:* ${name}\n`;
       msg += `*Phone:* ${phone1}${phone2 ? ' / ' + phone2 : ''}\n`;
@@ -726,20 +740,52 @@
 
       msg += `\n*Subtotal:* ${subtotal} EGP`;
       msg += `\n*Shipping:* ${settings.shippingRate} EGP`;
-      msg += `\n*Total Amount:* ${total} EGP\n\n`;
-      
-      if (payment === 'InstaPay') {
-        msg += `📱 *InstaPay Handle:* ${settings.instapay}\n(Screenshot attached below)\n`;
+      msg += `\n*Total Amount:* ${total} EGP\n`;
+
+      const route = settings.notificationRoute || 'whatsapp';
+
+      // 1. WhatsApp Route
+      if (route === 'whatsapp' || route === 'both') {
+        const encodedMsg = encodeURIComponent(msg);
+        window.open(`https://wa.me/${settings.whatsapp}?text=${encodedMsg}`, '_blank');
       }
 
-      const encodedMsg = encodeURIComponent(msg);
-      const waUrl = `https://wa.me/${settings.whatsapp}?text=${encodedMsg}`;
+      // 2. Direct Background Email Route (Formspree Endpoint or mailto Backup)
+      if (route === 'email' || route === 'both') {
+        if (settings.formspreeEndpoint) {
+          fetch(settings.formspreeEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              name: name,
+              phone: phone1,
+              city: city,
+              address: address,
+              payment: payment,
+              totalAmount: total,
+              orderDetails: msg.replace(/\*/g, '')
+            })
+          }).catch(err => console.log('Email dispatch note:', err));
+        } else if (route === 'email') {
+          const emailSubject = encodeURIComponent(`New Flora & Co. Order from ${name}`);
+          const emailBody = encodeURIComponent(msg.replace(/\*/g, ''));
+          window.open(`mailto:${settings.notificationEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
+        }
+      }
 
-      // Open WhatsApp & Show Success Modal
-      window.open(waUrl, '_blank');
+      // Deduct Stock
+      cart.forEach(cItem => {
+        const prod = products.find(p => p.id === cItem.productId);
+        if (prod && prod.stock !== undefined) {
+          prod.stock = Math.max(0, prod.stock - cItem.qty);
+        }
+      });
+      localStorage.setItem('flora_products', JSON.stringify(products));
+
       cart = [];
       updateCartUI();
       toggleCartDrawer();
+      renderStorefront();
       document.getElementById('orderSuccessModal').classList.remove('hidden');
     }
 
@@ -747,7 +793,7 @@
       document.getElementById('orderSuccessModal').classList.add('hidden');
     }
 
-    // ADMIN PANEL FUNCTIONS
+    // ADMIN FUNCTIONS
     function openAdminModal() {
       document.getElementById('adminModal').classList.remove('hidden');
     }
@@ -789,11 +835,11 @@
       }
     }
 
-    // ADD NEW PRODUCT WITH FILE UPLOAD
     function addNewProduct() {
       const title = document.getElementById('newProdTitle').value.trim();
       const category = document.getElementById('newProdCategory').value;
       const price = parseFloat(document.getElementById('newProdPrice').value);
+      const stock = parseInt(document.getElementById('newProdStock').value) || 10;
       const sizesStr = document.getElementById('newProdSizes').value.trim();
       const desc = document.getElementById('newProdDesc').value.trim();
       const allowCustomText = document.getElementById('newProdCustomText').checked;
@@ -804,7 +850,6 @@
         return;
       }
 
-      // Parse size variants if provided
       let sizes = [];
       if (sizesStr) {
         sizesStr.split(',').forEach(part => {
@@ -821,6 +866,7 @@
           title: title,
           category: category,
           price: price,
+          stock: stock,
           sizes: sizes,
           allowCustomText: allowCustomText,
           image: imgUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600',
@@ -832,7 +878,6 @@
         renderStorefront();
         renderAdminProducts();
 
-        // Clear input fields
         document.getElementById('newProdTitle').value = '';
         document.getElementById('newProdPrice').value = '';
         document.getElementById('newProdSizes').value = '';
@@ -843,9 +888,7 @@
 
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-          saveProductObj(e.target.result);
-        };
+        reader.onload = function(e) { saveProductObj(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
         saveProductObj(null);
@@ -860,7 +903,7 @@
             <img src="${p.image}" class="w-8 h-8 rounded object-cover">
             <div>
               <p class="font-bold text-gray-800">${p.title}</p>
-              <p class="text-gray-500">${p.price} EGP</p>
+              <p class="text-gray-500">${p.price} EGP • Stock: ${p.stock !== undefined ? p.stock : 10}</p>
             </div>
           </div>
           <button onclick="deleteProduct(${idx})" class="text-red-500 hover:text-red-700 font-bold">Delete</button>
@@ -877,7 +920,6 @@
       }
     }
 
-    // CATEGORY MANAGEMENT
     function addNewCategory() {
       const name = document.getElementById('newCatName').value.trim();
       if (!name) return;
@@ -912,16 +954,34 @@
       }
     }
 
-    // SAVE STORE SETTINGS
     function saveStoreSettings() {
+      settings.primaryColor = document.getElementById('cfgPrimaryColor').value;
+      settings.bgTint = document.getElementById('cfgBgTint').value;
+      settings.notificationRoute = document.getElementById('cfgNotificationRoute').value;
+      settings.notificationEmail = document.getElementById('cfgNotificationEmail').value.trim();
+      settings.formspreeEndpoint = document.getElementById('cfgFormspreeEndpoint').value.trim();
       settings.whatsapp = document.getElementById('cfgWhatsapp').value.trim();
       settings.instapay = document.getElementById('cfgInstaPay').value.trim();
       settings.shippingRate = parseFloat(document.getElementById('cfgShippingRate').value) || 0;
       settings.banner = document.getElementById('cfgBanner').value.trim();
+      settings.heroTitle = document.getElementById('cfgHeroTitle').value.trim();
+      settings.heroSubtitle = document.getElementById('cfgHeroSubtitle').value.trim();
 
-      localStorage.setItem('flora_settings', JSON.stringify(settings));
-      applySettings();
-      alert('Store settings saved!');
+      const bgFile = document.getElementById('cfgHeroBgFile');
+      if (bgFile.files && bgFile.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          settings.heroBg = e.target.result;
+          localStorage.setItem('flora_settings', JSON.stringify(settings));
+          applySettings();
+          alert('Settings saved successfully!');
+        };
+        reader.readAsDataURL(bgFile.files[0]);
+      } else {
+        localStorage.setItem('flora_settings', JSON.stringify(settings));
+        applySettings();
+        alert('Settings saved successfully!');
+      }
     }
   </script>
 </body>
