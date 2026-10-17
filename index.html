@@ -6,6 +6,8 @@
   <title>Flora & Co. — Handcrafted Stationery & Lifestyle</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- EmailJS SDK Integration -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style id="customDynamicStyles">
     :root {
       --primary-color: #db2777;
@@ -61,7 +63,7 @@
     </nav>
   </header>
 
-  <!-- Hero Banner with Custom Image & Text -->
+  <!-- Hero Banner -->
   <section class="relative bg-gradient-to-b from-pink-50/80 via-yellow-50/40 to-transparent py-10 sm:py-16 px-4 text-center border-b border-pink-100/40 overflow-hidden">
     <div id="heroBannerBg" class="absolute inset-0 bg-cover bg-center opacity-20 hidden"></div>
     <div class="relative max-w-3xl mx-auto space-y-4">
@@ -71,7 +73,7 @@
     </div>
   </section>
 
-  <!-- Store Catalog -->
+  <!-- Catalog -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-grow w-full">
     <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
       <div class="w-full sm:w-72 relative">
@@ -112,19 +114,16 @@
 
         <p id="modalProductDesc" class="text-sm text-gray-600 leading-relaxed"></p>
 
-        <!-- Sizes -->
         <div id="modalSizeContainer" class="space-y-2 hidden">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Select Size</label>
           <div id="modalSizeOptions" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <!-- Custom Embroidery Text -->
         <div id="modalCustomTextContainer" class="space-y-2 hidden">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Custom Embroidery / Name Monogram</label>
           <input type="text" id="modalCustomTextInput" placeholder="Enter name or initials..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
         </div>
 
-        <!-- Quantity Selection -->
         <div class="space-y-2">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Quantity</label>
           <div class="flex items-center space-x-3">
@@ -160,6 +159,7 @@
         <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">Shipping Details</h4>
         
         <input type="text" id="custName" placeholder="Full Name *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white">
+        <input type="email" id="custEmail" placeholder="Your Email Address (For Order Receipt) *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white">
         
         <div class="grid grid-cols-2 gap-2">
           <input type="tel" id="custPhone1" placeholder="Primary Phone *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white">
@@ -170,7 +170,7 @@
           <input type="text" id="custCity" placeholder="City / Area *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white">
           <select id="custPaymentMethod" onchange="togglePaymentInstructions()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white font-medium">
             <option value="Cash on Delivery">Cash on Delivery</option>
-            <option value="InstaPay">InstaPay / Wallet</option>
+            <option id="optInstaPay" value="InstaPay">InstaPay / Wallet</option>
           </select>
         </div>
 
@@ -199,13 +199,13 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-pink-100">
       <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-3xl">✓</div>
       <h3 class="font-serif text-2xl font-bold text-gray-900">Order Placed!</h3>
-      <p class="text-xs text-gray-600 leading-relaxed">Thank you for ordering from Flora & Co.! What happens next?</p>
+      <p class="text-xs text-gray-600 leading-relaxed">Thank you for ordering! A confirmation email has been dispatched from <strong>florastitchess@gmail.com</strong>.</p>
       
       <div class="bg-pink-50 p-3 rounded-xl text-left text-xs space-y-2 border border-pink-100">
         <p class="font-bold text-pink-800">📋 Next Steps:</p>
-        <p>1. If WhatsApp opened, please send the pre-filled order message.</p>
-        <p>2. For InstaPay orders, please send your payment transfer screenshot.</p>
-        <p>3. We will confirm your delivery details shortly!</p>
+        <p>1. Check your email inbox for your official receipt.</p>
+        <p>2. If WhatsApp opened, please send the pre-filled message to confirm your order.</p>
+        <p>3. For InstaPay orders, please send your payment transfer screenshot.</p>
       </div>
 
       <button onclick="closeSuccessModal()" class="w-full brand-bg-primary text-white font-bold py-2.5 rounded-xl text-xs">Back to Store</button>
@@ -291,7 +291,29 @@
         <!-- STORE SETTINGS TAB -->
         <div id="adminTabSettings" class="space-y-4 hidden">
           
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Color Palette Customization</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Payment Methods Control</h4>
+          <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 flex items-center space-x-3">
+            <input type="checkbox" id="cfgEnableInstapay" class="w-4 h-4 text-pink-600 rounded">
+            <label for="cfgEnableInstapay" class="text-xs font-bold text-gray-800">Enable InstaPay / Wallet Payment Option at Checkout</label>
+          </div>
+
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">2. Automatic EmailJS Configuration (florastitchess@gmail.com)</h4>
+          <div class="space-y-2 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">EmailJS Service ID</label>
+              <input type="text" id="cfgEmailJsService" placeholder="e.g. service_1234" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">EmailJS Template ID</label>
+              <input type="text" id="cfgEmailJsTemplate" placeholder="e.g. template_5678" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-gray-700 mb-1">EmailJS Public Key</label>
+              <input type="text" id="cfgEmailJsPublicKey" placeholder="e.g. user_9012" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+            </div>
+          </div>
+
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">3. Color Palette Customization</h4>
           <div class="grid grid-cols-2 gap-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-1">Primary Theme Color</label>
@@ -303,19 +325,16 @@
             </div>
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">2. Order Notification Channel</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">4. Notification Channel</h4>
           <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
-            <label class="block text-xs font-bold text-gray-700">Notify store owner via:</label>
             <select id="cfgNotificationRoute" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
-              <option value="whatsapp">WhatsApp Only</option>
+              <option value="both">Both (WhatsApp + Automatic Email)</option>
               <option value="email">Email Only</option>
-              <option value="both">Both (WhatsApp + Email)</option>
+              <option value="whatsapp">WhatsApp Only</option>
             </select>
-            <input type="email" id="cfgNotificationEmail" placeholder="Store Owner Email (e.g. hello@floraandco.com)" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
-            <input type="url" id="cfgFormspreeEndpoint" placeholder="Formspree Endpoint URL (e.g. https://formspree.io/f/xbjnqpkz)" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">3. Banner & Store Information</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">5. Store Information</h4>
           <div class="space-y-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
             <div class="grid grid-cols-2 gap-3">
               <div>
@@ -397,11 +416,13 @@
     let categories = JSON.parse(localStorage.getItem('flora_categories')) || DEFAULT_CATEGORIES;
     let products = JSON.parse(localStorage.getItem('flora_products')) || DEFAULT_PRODUCTS;
     let settings = JSON.parse(localStorage.getItem('flora_settings')) || {
+      enableInstapay: true,
       primaryColor: '#db2777',
       bgTint: '#fffdfa',
-      notificationRoute: 'whatsapp',
-      notificationEmail: 'hello@floraandco.com',
-      formspreeEndpoint: '',
+      notificationRoute: 'both',
+      emailJsService: '',
+      emailJsTemplate: '',
+      emailJsPublicKey: '',
       whatsapp: '201000000000',
       instapay: 'flora@instapay',
       shippingRate: 50,
@@ -432,6 +453,17 @@
       document.getElementById('heroSubtitleText').innerText = settings.heroSubtitle || '';
       document.getElementById('displayInstaHandle').innerText = settings.instapay;
 
+      // Handle InstaPay Payment Option Visibility
+      const instaPayOpt = document.getElementById('optInstaPay');
+      const paySelect = document.getElementById('custPaymentMethod');
+      if (settings.enableInstapay !== false) {
+        instaPayOpt.style.display = '';
+      } else {
+        instaPayOpt.style.display = 'none';
+        paySelect.value = 'Cash on Delivery';
+        togglePaymentInstructions();
+      }
+
       const heroBg = document.getElementById('heroBannerBg');
       if (settings.heroBg) {
         heroBg.style.backgroundImage = `url('${settings.heroBg}')`;
@@ -440,11 +472,17 @@
         heroBg.classList.add('hidden');
       }
 
+      if (settings.emailJsPublicKey) {
+        try { emailjs.init(settings.emailJsPublicKey); } catch(e){}
+      }
+
+      document.getElementById('cfgEnableInstapay').checked = settings.enableInstapay !== false;
       document.getElementById('cfgPrimaryColor').value = settings.primaryColor || '#db2777';
       document.getElementById('cfgBgTint').value = settings.bgTint || '#fffdfa';
-      document.getElementById('cfgNotificationRoute').value = settings.notificationRoute || 'whatsapp';
-      document.getElementById('cfgNotificationEmail').value = settings.notificationEmail || '';
-      document.getElementById('cfgFormspreeEndpoint').value = settings.formspreeEndpoint || '';
+      document.getElementById('cfgNotificationRoute').value = settings.notificationRoute || 'both';
+      document.getElementById('cfgEmailJsService').value = settings.emailJsService || '';
+      document.getElementById('cfgEmailJsTemplate').value = settings.emailJsTemplate || '';
+      document.getElementById('cfgEmailJsPublicKey').value = settings.emailJsPublicKey || '';
       document.getElementById('cfgWhatsapp').value = settings.whatsapp;
       document.getElementById('cfgInstaPay').value = settings.instapay;
       document.getElementById('cfgShippingRate').value = settings.shippingRate;
@@ -711,69 +749,61 @@
       }
 
       const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('custEmail').value.trim();
       const phone1 = document.getElementById('custPhone1').value.trim();
       const phone2 = document.getElementById('custPhone2').value.trim();
       const city = document.getElementById('custCity').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const payment = document.getElementById('custPaymentMethod').value;
 
-      if (!name || !phone1 || !city || !address) {
-        alert('Please fill in all required shipping details.');
+      if (!name || !email || !phone1 || !city || !address) {
+        alert('Please fill in all required shipping and email details.');
         return;
       }
 
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
       const total = subtotal + settings.shippingRate;
+      const orderId = 'FLORA-' + Math.floor(1000 + Math.random() * 9000);
 
-      let msg = `🌸 *NEW ORDER — FLORA & CO.*\n\n`;
+      let itemSummaryStr = '';
+      cart.forEach((item, idx) => {
+        itemSummaryStr += `${idx + 1}. ${item.title} ${item.sizeName ? '(' + item.sizeName + ')' : ''} × ${item.qty} — ${item.price * item.qty} EGP\n`;
+        if (item.customText) itemSummaryStr += `   └ Monogram: "${item.customText}"\n`;
+      });
+
+      let msg = `🌸 *NEW ORDER — FLORA & CO. (#${orderId})*\n\n`;
       msg += `*Customer:* ${name}\n`;
+      msg += `*Email:* ${email}\n`;
       msg += `*Phone:* ${phone1}${phone2 ? ' / ' + phone2 : ''}\n`;
       msg += `*City/Area:* ${city}\n`;
       msg += `*Address:* ${address}\n`;
       msg += `*Payment:* ${payment}\n\n`;
-      msg += `*Order Items:*\n`;
+      msg += `*Order Items:*\n${itemSummaryStr}\n`;
+      msg += `*Subtotal:* ${subtotal} EGP\n`;
+      msg += `*Shipping:* ${settings.shippingRate} EGP\n`;
+      msg += `*Total Amount:* ${total} EGP\n`;
 
-      cart.forEach((item, idx) => {
-        msg += `${idx + 1}. ${item.title} ${item.sizeName ? '(' + item.sizeName + ')' : ''} × ${item.qty} — ${item.price * item.qty} EGP\n`;
-        if (item.customText) msg += `   └ Monogram: "${item.customText}"\n`;
-      });
+      const route = settings.notificationRoute || 'both';
 
-      msg += `\n*Subtotal:* ${subtotal} EGP`;
-      msg += `\n*Shipping:* ${settings.shippingRate} EGP`;
-      msg += `\n*Total Amount:* ${total} EGP\n`;
-
-      const route = settings.notificationRoute || 'whatsapp';
-
-      // 1. WhatsApp Route
       if (route === 'whatsapp' || route === 'both') {
         const encodedMsg = encodeURIComponent(msg);
         window.open(`https://wa.me/${settings.whatsapp}?text=${encodedMsg}`, '_blank');
       }
 
-      // 2. Direct Background Email Route (Formspree Endpoint or mailto Backup)
-      if (route === 'email' || route === 'both') {
-        if (settings.formspreeEndpoint) {
-          fetch(settings.formspreeEndpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({
-              name: name,
-              phone: phone1,
-              city: city,
-              address: address,
-              payment: payment,
-              totalAmount: total,
-              orderDetails: msg.replace(/\*/g, '')
-            })
-          }).catch(err => console.log('Email dispatch note:', err));
-        } else if (route === 'email') {
-          const emailSubject = encodeURIComponent(`New Flora & Co. Order from ${name}`);
-          const emailBody = encodeURIComponent(msg.replace(/\*/g, ''));
-          window.open(`mailto:${settings.notificationEmail}?subject=${emailSubject}&body=${emailBody}`, '_blank');
-        }
+      if ((route === 'email' || route === 'both') && settings.emailJsService && settings.emailJsTemplate) {
+        emailjs.send(settings.emailJsService, settings.emailJsTemplate, {
+          order_id: orderId,
+          customer_name: name,
+          customer_email: email,
+          phone: phone1,
+          city: city,
+          address: address,
+          payment_method: payment,
+          order_details: itemSummaryStr,
+          total_amount: total
+        }).then(() => console.log('Email dispatched successfully!')).catch(err => console.log('Email dispatch error:', err));
       }
 
-      // Deduct Stock
       cart.forEach(cItem => {
         const prod = products.find(p => p.id === cItem.productId);
         if (prod && prod.stock !== undefined) {
@@ -793,7 +823,7 @@
       document.getElementById('orderSuccessModal').classList.add('hidden');
     }
 
-    // ADMIN FUNCTIONS
+    // ADMIN DASHBOARD FUNCTIONS
     function openAdminModal() {
       document.getElementById('adminModal').classList.remove('hidden');
     }
@@ -955,11 +985,13 @@
     }
 
     function saveStoreSettings() {
+      settings.enableInstapay = document.getElementById('cfgEnableInstapay').checked;
       settings.primaryColor = document.getElementById('cfgPrimaryColor').value;
       settings.bgTint = document.getElementById('cfgBgTint').value;
       settings.notificationRoute = document.getElementById('cfgNotificationRoute').value;
-      settings.notificationEmail = document.getElementById('cfgNotificationEmail').value.trim();
-      settings.formspreeEndpoint = document.getElementById('cfgFormspreeEndpoint').value.trim();
+      settings.emailJsService = document.getElementById('cfgEmailJsService').value.trim();
+      settings.emailJsTemplate = document.getElementById('cfgEmailJsTemplate').value.trim();
+      settings.emailJsPublicKey = document.getElementById('cfgEmailJsPublicKey').value.trim();
       settings.whatsapp = document.getElementById('cfgWhatsapp').value.trim();
       settings.instapay = document.getElementById('cfgInstaPay').value.trim();
       settings.shippingRate = parseFloat(document.getElementById('cfgShippingRate').value) || 0;
