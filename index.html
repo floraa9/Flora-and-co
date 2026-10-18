@@ -33,9 +33,13 @@
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100 transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
       
+      <!-- Logo Container (Supports Custom Uploaded Logo Image) -->
       <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('all')">
-        <div class="w-10 h-10 rounded-full bg-pink-100 border border-pink-200 flex items-center justify-center brand-text-primary font-serif font-bold text-xl shadow-sm">
-          F
+        <div id="logoContainer" class="flex items-center justify-center">
+          <div id="defaultLogoIcon" class="w-10 h-10 rounded-full bg-pink-100 border border-pink-200 flex items-center justify-center brand-text-primary font-serif font-bold text-xl shadow-sm">
+            F
+          </div>
+          <img id="customLogoImg" src="" alt="Flora & Co." class="h-10 sm:h-12 w-auto object-contain hidden">
         </div>
         <div>
           <h1 id="storeBrandName" class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-gray-900">Flora & Co.</h1>
@@ -43,12 +47,8 @@
         </div>
       </div>
 
+      <!-- Action Button (Only Shopping Bag in Header) -->
       <div class="flex items-center space-x-3 sm:space-x-5">
-        <button onclick="openAdminModal()" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 hover:bg-pink-100 text-gray-700 hover:text-pink-700 transition flex items-center space-x-1 border border-gray-200">
-          <span>⚙️</span>
-          <span class="hidden sm:inline">Admin Panel</span>
-        </button>
-
         <button onclick="toggleCartDrawer()" class="relative p-2 text-gray-700 hover:text-pink-600 transition">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -86,17 +86,17 @@
     <div id="storeSectionsContainer" class="space-y-12"></div>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer with Discreet Admin Login -->
   <footer class="bg-pink-50/80 border-t border-pink-100 py-8 px-4 text-center text-xs text-gray-600 mt-12">
     <div class="max-w-7xl mx-auto space-y-3">
       <p class="font-serif text-base font-bold text-gray-800">Flora & Co.</p>
       <p>Handcrafted sewn goods & custom stationery</p>
       <div class="flex justify-center items-center space-x-4 pt-1">
         <button onclick="openReturnsModal()" class="text-xs text-pink-600 underline hover:text-pink-800">Returns & Exchanges Policy</button>
-        <span>•</span>
-        <button onclick="openAdminModal()" class="underline hover:text-pink-600">Admin Login</button>
       </div>
-      <p class="text-gray-400">© 2026 Flora & Co. All rights reserved.</p>
+      <p class="text-gray-400 text-[11px] pt-4">
+        © 2026 Flora & Co. All rights reserved. • <button onclick="openAdminModal()" class="hover:text-gray-600 text-gray-300 transition">Admin</button>
+      </p>
     </div>
   </footer>
 
@@ -176,7 +176,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER -->
+  <!-- CART DRAWER WITH CITY DROPDOWN -->
   <div id="cartDrawer" class="fixed inset-0 bg-black/50 z-50 hidden backdrop-blur-sm flex justify-end">
     <div class="bg-white w-full max-w-md h-full flex flex-col justify-between shadow-2xl">
       <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-pink-50">
@@ -201,7 +201,11 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="custCity" placeholder="City / Area *" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white">
+          <!-- Dynamic City Select Dropdown -->
+          <select id="custCitySelect" onchange="updateCartUI()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white font-medium">
+            <option value="">Select City / Governorate *</option>
+          </select>
+
           <select id="custPaymentMethod" onchange="togglePaymentInstructions()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white font-medium">
             <option value="Cash on Delivery">Cash on Delivery</option>
             <option id="optInstaPay" value="InstaPay">InstaPay / Wallet</option>
@@ -217,8 +221,8 @@
 
         <div class="pt-2 border-t border-gray-200 space-y-1">
           <div class="flex justify-between text-xs text-gray-600"><span>Subtotal:</span><span id="cartSubtotalText">0 EGP</span></div>
-          <div class="flex justify-between text-xs text-gray-600"><span>Shipping:</span><span id="cartShippingText">50 EGP</span></div>
-          <div class="flex justify-between text-sm font-bold brand-text-primary pt-1"><span>Total:</span><span id="cartTotalText">50 EGP</span></div>
+          <div class="flex justify-between text-xs text-gray-600"><span>Shipping (<span id="selectedCityLabel">Select City</span>):</span><span id="cartShippingText">0 EGP</span></div>
+          <div class="flex justify-between text-sm font-bold brand-text-primary pt-1"><span>Total:</span><span id="cartTotalText">0 EGP</span></div>
 
           <button onclick="submitOrder()" id="checkoutSubmitBtn" class="w-full brand-bg-primary text-white font-bold py-3 rounded-xl text-sm shadow-md mt-2 transition hover:opacity-90">
             Place Order
@@ -246,9 +250,9 @@
     </div>
   </div>
 
-  <!-- ADMIN PANEL MODAL -->
+  <!-- ADMIN PANEL MODAL (WITH ORDERS LISTING & LOGO UPLOAD) -->
   <div id="adminModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-pink-100">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-pink-100">
       
       <div class="p-4 bg-gray-900 text-white flex justify-between items-center">
         <h3 class="font-serif font-bold text-lg flex items-center space-x-2">
@@ -268,13 +272,23 @@
       <div id="adminDashboardSection" class="p-6 overflow-y-auto space-y-8 hidden flex-grow">
         
         <div class="flex border-b border-gray-200 text-xs font-bold">
-          <button onclick="switchAdminTab('products')" id="tabBtnProducts" class="py-2 px-4 border-b-2 border-pink-600 text-pink-600">Products</button>
+          <button onclick="switchAdminTab('orders')" id="tabBtnOrders" class="py-2 px-4 border-b-2 border-pink-600 text-pink-600">📦 Orders Received</button>
+          <button onclick="switchAdminTab('products')" id="tabBtnProducts" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Products</button>
           <button onclick="switchAdminTab('categories')" id="tabBtnCategories" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Categories</button>
-          <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Store & Colors</button>
+          <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Store & Shipping</button>
         </div>
 
-        <!-- PRODUCTS TAB -->
-        <div id="adminTabProducts" class="space-y-6">
+        <!-- 1. ORDERS RECEIVED TAB -->
+        <div id="adminTabOrders" class="space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="font-bold text-sm text-gray-800">Recent Customer Orders</h4>
+            <button onclick="clearAllOrders()" class="text-xs text-red-500 hover:underline font-semibold">Clear All Orders</button>
+          </div>
+          <div id="adminOrdersListContainer" class="space-y-3"></div>
+        </div>
+
+        <!-- 2. PRODUCTS TAB -->
+        <div id="adminTabProducts" class="space-y-6 hidden">
           <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-100 space-y-3">
             <div class="flex justify-between items-center">
               <h4 id="adminProductFormTitle" class="font-bold text-sm text-pink-800">Add New Product</h4>
@@ -309,7 +323,7 @@
                   <input type="number" id="newProdPrice" placeholder="e.g. 250" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
                 </div>
                 <div>
-                  <label class="block text-[10px] text-gray-500 mb-0.5">Original Strikethrough Price (Optional)</label>
+                  <label class="block text-[10px] text-gray-500 mb-0.5">Original Price (Optional)</label>
                   <input type="number" id="newProdOriginalPrice" placeholder="e.g. 300" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
                 </div>
                 <div>
@@ -346,7 +360,7 @@
           </div>
         </div>
 
-        <!-- CATEGORIES TAB -->
+        <!-- 3. CATEGORIES TAB -->
         <div id="adminTabCategories" class="space-y-4 hidden">
           <div class="bg-gray-50 p-4 rounded-xl border space-y-3">
             <h4 class="font-bold text-sm text-gray-800">Add New Category Section</h4>
@@ -358,22 +372,34 @@
           <div id="adminCategoriesList" class="space-y-2"></div>
         </div>
 
-        <!-- STORE SETTINGS TAB -->
+        <!-- 4. STORE SETTINGS, LOGO & CITY SHIPPING RATES TAB -->
         <div id="adminTabSettings" class="space-y-4 hidden">
           
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Payment Methods Control</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Store Logo Customization</h4>
+          <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
+            <label class="block text-xs font-bold text-gray-700">Upload Logo Photo (Replaces 'F' Icon on Left):</label>
+            <input type="file" id="cfgLogoBgFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-pink-100 file:text-pink-700">
+          </div>
+
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">2. City-Based Shipping Rates</h4>
+          <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
+            <label class="block text-xs font-bold text-gray-700">Add Cities & Shipping Fees (Format: CityName:Fee, e.g. Cairo:50, Alexandria:60, Giza:50):</label>
+            <textarea id="cfgCityShippingRates" rows="3" placeholder="Cairo:50, Alexandria:60, Giza:50, Mansoura:70" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-mono"></textarea>
+          </div>
+
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">3. Payment Methods Control</h4>
           <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 flex items-center space-x-3">
             <input type="checkbox" id="cfgEnableInstapay" class="w-4 h-4 text-pink-600 rounded">
             <label for="cfgEnableInstapay" class="text-xs font-bold text-gray-800">Enable InstaPay / Wallet Payment Option at Checkout</label>
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">2. Returns & Exchanges Policy Details</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">4. Returns & Exchanges Policy Details</h4>
           <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
             <label class="block text-xs font-bold text-gray-700">Returns & Exchanges Policy Text:</label>
-            <textarea id="cfgReturnsPolicy" rows="4" placeholder="Enter your return conditions, timelines, and refund rules here..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
+            <textarea id="cfgReturnsPolicy" rows="3" placeholder="Enter your return conditions, timelines, and refund rules here..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">3. Automatic EmailJS Configuration (florastitchess@gmail.com)</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">5. Automatic EmailJS Configuration (florastitchess@gmail.com)</h4>
           <div class="space-y-2 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
             <div>
               <label class="block text-[11px] font-bold text-gray-700 mb-1">EmailJS Service ID</label>
@@ -389,7 +415,7 @@
             </div>
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">4. Color Palette Customization</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">6. Color Palette Customization</h4>
           <div class="grid grid-cols-2 gap-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-1">Primary Theme Color</label>
@@ -401,7 +427,7 @@
             </div>
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">5. Notification Channel</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">7. Notification Channel</h4>
           <div class="bg-pink-50/50 p-3 rounded-xl border border-pink-100 space-y-2">
             <select id="cfgNotificationRoute" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
               <option value="both">Both (WhatsApp + Automatic Email)</option>
@@ -410,7 +436,7 @@
             </select>
           </div>
 
-          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">6. Store Information</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700 pt-2">8. Store Information</h4>
           <div class="space-y-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
             <div class="grid grid-cols-2 gap-3">
               <div>
@@ -441,11 +467,6 @@
             <div>
               <label class="block text-xs font-bold text-gray-700 mb-1">Upload Hero Banner Background Photo</label>
               <input type="file" id="cfgHeroBgFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-pink-100 file:text-pink-700">
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Flat Shipping Rate (EGP)</label>
-              <input type="number" id="cfgShippingRate" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
             </div>
           </div>
 
@@ -493,8 +514,11 @@
 
     let categories = JSON.parse(localStorage.getItem('flora_categories')) || DEFAULT_CATEGORIES;
     let products = JSON.parse(localStorage.getItem('flora_products')) || DEFAULT_PRODUCTS;
+    let orders = JSON.parse(localStorage.getItem('flora_orders')) || [];
     let settings = JSON.parse(localStorage.getItem('flora_settings')) || {
+      logoImg: '',
       enableInstapay: true,
+      cityShippingRates: "Cairo:50, Giza:50, Alexandria:60, Mansoura:70, Tanta:65, Canal Cities:75, Upper Egypt:90",
       returnsPolicy: "Returns & Exchanges are accepted within 14 days of delivery for non-customized products in original condition.\nCustom embroidered products cannot be returned unless damaged.",
       primaryColor: '#db2777',
       bgTint: '#fffdfa',
@@ -504,7 +528,6 @@
       emailJsPublicKey: '',
       whatsapp: '201000000000',
       instapay: 'flora@instapay',
-      shippingRate: 50,
       banner: '🌸 Handmade with love — Free shipping on orders over 500 EGP!',
       heroTitle: 'Handmade Pouches, Stationery & Accessories',
       heroSubtitle: 'Thoughtfully sewn make-up pouches, book sleeves, bookmarks, printed notebooks, and planner stickers.',
@@ -516,17 +539,51 @@
     let currentModalProduct = null;
     let selectedSize = null;
     let selectedQty = 1;
-    let currentModalImgIndex = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
       applySettings();
       renderCategoryNav();
       renderStorefront();
+      populateCitySelectDropdown();
     });
+
+    function getParsedCityShippingRates() {
+      const result = [];
+      const raw = settings.cityShippingRates || "Cairo:50, Giza:50, Alexandria:60";
+      raw.split(',').forEach(part => {
+        const [cName, cFee] = part.split(':');
+        if (cName && cFee) {
+          result.push({ name: cName.trim(), fee: parseFloat(cFee.trim()) || 0 });
+        }
+      });
+      return result;
+    }
+
+    function populateCitySelectDropdown() {
+      const select = document.getElementById('custCitySelect');
+      const cities = getParsedCityShippingRates();
+      let html = '<option value="">Select City / Governorate *</option>';
+      cities.forEach(c => {
+        html += `<option value="${c.name}" data-fee="${c.fee}">${c.name} (${c.fee} EGP Shipping)</option>`;
+      });
+      select.innerHTML = html;
+    }
 
     function applySettings() {
       document.documentElement.style.setProperty('--primary-color', settings.primaryColor || '#db2777');
       document.documentElement.style.setProperty('--bg-tint', settings.bgTint || '#fffdfa');
+
+      // Custom Logo Display
+      const defaultIcon = document.getElementById('defaultLogoIcon');
+      const customImg = document.getElementById('customLogoImg');
+      if (settings.logoImg) {
+        customImg.src = settings.logoImg;
+        customImg.classList.remove('hidden');
+        defaultIcon.classList.add('hidden');
+      } else {
+        customImg.classList.add('hidden');
+        defaultIcon.classList.remove('hidden');
+      }
 
       document.getElementById('announcementBanner').innerText = settings.banner;
       document.getElementById('heroTitleText').innerText = settings.heroTitle || 'Handmade Pouches, Stationery & Accessories';
@@ -557,6 +614,7 @@
       }
 
       document.getElementById('cfgEnableInstapay').checked = settings.enableInstapay !== false;
+      document.getElementById('cfgCityShippingRates').value = settings.cityShippingRates || '';
       document.getElementById('cfgReturnsPolicy').value = settings.returnsPolicy || '';
       document.getElementById('cfgPrimaryColor').value = settings.primaryColor || '#db2777';
       document.getElementById('cfgBgTint').value = settings.bgTint || '#fffdfa';
@@ -566,7 +624,6 @@
       document.getElementById('cfgEmailJsPublicKey').value = settings.emailJsPublicKey || '';
       document.getElementById('cfgWhatsapp').value = settings.whatsapp;
       document.getElementById('cfgInstaPay').value = settings.instapay;
-      document.getElementById('cfgShippingRate').value = settings.shippingRate;
       document.getElementById('cfgBanner').value = settings.banner;
       document.getElementById('cfgHeroTitle').value = settings.heroTitle || '';
       document.getElementById('cfgHeroSubtitle').value = settings.heroSubtitle || '';
@@ -679,7 +736,6 @@
       if (!currentModalProduct) return;
 
       selectedQty = 1;
-      currentModalImgIndex = 0;
       document.getElementById('modalQtyDisplay').innerText = '1';
 
       const imgList = (currentModalProduct.images && currentModalProduct.images.length > 0) ? currentModalProduct.images : [(currentModalProduct.image || '')];
@@ -748,7 +804,6 @@
       const imgList = (currentModalProduct.images && currentModalProduct.images.length > 0) ? currentModalProduct.images : [(currentModalProduct.image || '')];
       if (imgList[index]) {
         document.getElementById('modalProductImg').src = imgList[index];
-        currentModalImgIndex = index;
 
         const thumbs = document.querySelectorAll('#modalGalleryThumbnails img');
         thumbs.forEach((t, idx) => {
@@ -872,12 +927,19 @@
         `).join('');
       }
 
+      // Calculate Dynamic Shipping Fee based on Selected City Dropdown
+      const citySelect = document.getElementById('custCitySelect');
+      const selectedOption = citySelect.options[citySelect.selectedIndex];
+      const shippingFee = selectedOption && selectedOption.dataset.fee ? parseFloat(selectedOption.dataset.fee) : 0;
+      const selectedCityName = citySelect.value || 'Select City';
+
+      document.getElementById('selectedCityLabel').innerText = selectedCityName;
+
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      const shipping = subtotal > 0 ? settings.shippingRate : 0;
-      const total = subtotal + shipping;
+      const total = subtotal + shippingFee;
 
       document.getElementById('cartSubtotalText').innerText = `${subtotal} EGP`;
-      document.getElementById('cartShippingText').innerText = `${shipping} EGP`;
+      document.getElementById('cartShippingText').innerText = `${shippingFee} EGP`;
       document.getElementById('cartTotalText').innerText = `${total} EGP`;
     }
 
@@ -896,7 +958,7 @@
       }
     }
 
-    // SUBMIT ORDER & DEDUCT SPECIFIC SIZE STOCK
+    // SUBMIT ORDER, SAVE TO ORDERS LIST & DEDUCT STOCK
     function submitOrder() {
       if (cart.length === 0) {
         alert('Your cart is empty!');
@@ -907,17 +969,21 @@
       const email = document.getElementById('custEmail').value.trim();
       const phone1 = document.getElementById('custPhone1').value.trim();
       const phone2 = document.getElementById('custPhone2').value.trim();
-      const city = document.getElementById('custCity').value.trim();
+      const citySelect = document.getElementById('custCitySelect');
+      const city = citySelect.value;
       const address = document.getElementById('custAddress').value.trim();
       const payment = document.getElementById('custPaymentMethod').value;
 
       if (!name || !email || !phone1 || !city || !address) {
-        alert('Please fill in all required shipping and email details.');
+        alert('Please select your city and fill in all required shipping details.');
         return;
       }
 
+      const selectedOption = citySelect.options[citySelect.selectedIndex];
+      const shippingFee = selectedOption && selectedOption.dataset.fee ? parseFloat(selectedOption.dataset.fee) : 0;
+
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      const total = subtotal + settings.shippingRate;
+      const total = subtotal + shippingFee;
       const orderId = 'FLORA-' + Math.floor(1000 + Math.random() * 9000);
 
       let itemSummaryStr = '';
@@ -925,6 +991,26 @@
         itemSummaryStr += `${idx + 1}. ${item.title} ${item.sizeName ? '(' + item.sizeName + ')' : ''} × ${item.qty} — ${item.price * item.qty} EGP\n`;
         if (item.customText) itemSummaryStr += `   └ Monogram: "${item.customText}"\n`;
       });
+
+      // Save Order Record to Admin Orders State
+      const newOrderRecord = {
+        id: orderId,
+        date: new Date().toLocaleString(),
+        customerName: name,
+        email: email,
+        phone: phone1 + (phone2 ? ' / ' + phone2 : ''),
+        city: city,
+        address: address,
+        paymentMethod: payment,
+        items: [...cart],
+        subtotal: subtotal,
+        shippingFee: shippingFee,
+        totalAmount: total,
+        status: 'Pending'
+      };
+
+      orders.unshift(newOrderRecord);
+      localStorage.setItem('flora_orders', JSON.stringify(orders));
 
       let msg = `🌸 *NEW ORDER — FLORA & CO. (#${orderId})*\n\n`;
       msg += `*Customer:* ${name}\n`;
@@ -935,7 +1021,7 @@
       msg += `*Payment:* ${payment}\n\n`;
       msg += `*Order Items:*\n${itemSummaryStr}\n`;
       msg += `*Subtotal:* ${subtotal} EGP\n`;
-      msg += `*Shipping:* ${settings.shippingRate} EGP\n`;
+      msg += `*Shipping (${city}):* ${shippingFee} EGP\n`;
       msg += `*Total Amount:* ${total} EGP\n`;
 
       const route = settings.notificationRoute || 'both';
@@ -959,7 +1045,7 @@
         }).then(() => console.log('Email dispatched successfully!')).catch(err => console.log('Email dispatch error:', err));
       }
 
-      // Deduct Stock For Specific Size or Fixed Product
+      // Deduct Stock
       cart.forEach(cItem => {
         const prod = products.find(p => p.id === cItem.productId);
         if (prod) {
@@ -986,7 +1072,7 @@
       document.getElementById('orderSuccessModal').classList.add('hidden');
     }
 
-    // ADMIN FUNCTIONS
+    // ADMIN DASHBOARD & ORDERS MANAGEMENT
     function openAdminModal() {
       document.getElementById('adminModal').classList.remove('hidden');
     }
@@ -1000,6 +1086,7 @@
       if (pass === 'floramoonybear1221') {
         document.getElementById('adminAuthSection').classList.add('hidden');
         document.getElementById('adminDashboardSection').classList.remove('hidden');
+        renderAdminOrders();
         renderAdminProducts();
         renderAdminCategories();
       } else {
@@ -1008,15 +1095,21 @@
     }
 
     function switchAdminTab(tabName) {
+      document.getElementById('adminTabOrders').classList.add('hidden');
       document.getElementById('adminTabProducts').classList.add('hidden');
       document.getElementById('adminTabCategories').classList.add('hidden');
       document.getElementById('adminTabSettings').classList.add('hidden');
 
+      document.getElementById('tabBtnOrders').className = 'py-2 px-4 border-b-2 border-transparent text-gray-500';
       document.getElementById('tabBtnProducts').className = 'py-2 px-4 border-b-2 border-transparent text-gray-500';
       document.getElementById('tabBtnCategories').className = 'py-2 px-4 border-b-2 border-transparent text-gray-500';
       document.getElementById('tabBtnSettings').className = 'py-2 px-4 border-b-2 border-transparent text-gray-500';
 
-      if (tabName === 'products') {
+      if (tabName === 'orders') {
+        document.getElementById('adminTabOrders').classList.remove('hidden');
+        document.getElementById('tabBtnOrders').className = 'py-2 px-4 border-b-2 border-pink-600 text-pink-600';
+        renderAdminOrders();
+      } else if (tabName === 'products') {
         document.getElementById('adminTabProducts').classList.remove('hidden');
         document.getElementById('tabBtnProducts').className = 'py-2 px-4 border-b-2 border-pink-600 text-pink-600';
       } else if (tabName === 'categories') {
@@ -1025,6 +1118,67 @@
       } else if (tabName === 'settings') {
         document.getElementById('adminTabSettings').classList.remove('hidden');
         document.getElementById('tabBtnSettings').className = 'py-2 px-4 border-b-2 border-pink-600 text-pink-600';
+      }
+    }
+
+    function renderAdminOrders() {
+      const container = document.getElementById('adminOrdersListContainer');
+      if (orders.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400 py-8 text-center">No orders recorded yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = orders.map((o, idx) => `
+        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs space-y-2">
+          <div class="flex justify-between items-center border-b pb-1.5">
+            <div>
+              <span class="font-bold text-gray-900">${o.id}</span>
+              <span class="text-gray-400 text-[10px] ml-2">${o.date}</span>
+            </div>
+            <span class="px-2 py-0.5 rounded font-bold ${o.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-800'}">${o.status}</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <p><strong>Customer:</strong> ${o.customerName}</p>
+            <p><strong>Phone:</strong> ${o.phone}</p>
+            <p><strong>Email:</strong> ${o.email}</p>
+            <p><strong>City / Address:</strong> ${o.city} — ${o.address}</p>
+            <p><strong>Payment Method:</strong> ${o.paymentMethod}</p>
+            <p><strong>Total Paid:</strong> <span class="font-bold text-pink-600">${o.totalAmount} EGP</span> (${o.shippingFee} EGP Shipping)</p>
+          </div>
+
+          <div class="bg-white p-2 rounded border text-[11px] space-y-1">
+            <p class="font-bold text-gray-700">Items Ordered:</p>
+            ${o.items.map(i => `<p>• ${i.title}${i.sizeName ? '(' + i.sizeName + ')' : ''} × ${i.qty}${i.customText ? '["Monogram: ' + i.customText + '"]' : ''}</p>`).join('')}
+          </div>
+
+          <div class="flex justify-end space-x-2 pt-1">
+            ${o.status !== 'Completed' ? `<button onclick="toggleOrderStatus(${idx})" class="bg-green-600 text-white font-bold px-3 py-1 rounded">Mark as Completed</button>` : `<button onclick="toggleOrderStatus(${idx})" class="bg-gray-400 text-white font-bold px-3 py-1 rounded">Mark as Pending</button>`}
+            <button onclick="deleteOrder(${idx})" class="text-red-500 font-bold px-2 py-1">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleOrderStatus(index) {
+      orders[index].status = orders[index].status === 'Completed' ? 'Pending' : 'Completed';
+      localStorage.setItem('flora_orders', JSON.stringify(orders));
+      renderAdminOrders();
+    }
+
+    function deleteOrder(index) {
+      if (confirm('Delete this order record?')) {
+        orders.splice(index, 1);
+        localStorage.setItem('flora_orders', JSON.stringify(orders));
+        renderAdminOrders();
+      }
+    }
+
+    function clearAllOrders() {
+      if (confirm('Are you sure you want to clear all order records?')) {
+        orders = [];
+        localStorage.setItem('flora_orders', JSON.stringify(orders));
+        renderAdminOrders();
       }
     }
 
@@ -1277,6 +1431,7 @@
 
     function saveStoreSettings() {
       settings.enableInstapay = document.getElementById('cfgEnableInstapay').checked;
+      settings.cityShippingRates = document.getElementById('cfgCityShippingRates').value.trim();
       settings.returnsPolicy = document.getElementById('cfgReturnsPolicy').value.trim();
       settings.primaryColor = document.getElementById('cfgPrimaryColor').value;
       settings.bgTint = document.getElementById('cfgBgTint').value;
@@ -1286,25 +1441,45 @@
       settings.emailJsPublicKey = document.getElementById('cfgEmailJsPublicKey').value.trim();
       settings.whatsapp = document.getElementById('cfgWhatsapp').value.trim();
       settings.instapay = document.getElementById('cfgInstaPay').value.trim();
-      settings.shippingRate = parseFloat(document.getElementById('cfgShippingRate').value) || 0;
       settings.banner = document.getElementById('cfgBanner').value.trim();
       settings.heroTitle = document.getElementById('cfgHeroTitle').value.trim();
       settings.heroSubtitle = document.getElementById('cfgHeroSubtitle').value.trim();
 
+      const logoFile = document.getElementById('cfgLogoBgFile');
       const bgFile = document.getElementById('cfgHeroBgFile');
-      if (bgFile.files && bgFile.files[0]) {
+
+      const finalizeSave = () => {
+        localStorage.setItem('flora_settings', JSON.stringify(settings));
+        applySettings();
+        populateCitySelectDropdown();
+        alert('Settings saved successfully!');
+      };
+
+      if (logoFile.files && logoFile.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          settings.logoImg = e.target.result;
+          if (bgFile.files && bgFile.files[0]) {
+            const reader2 = new FileReader();
+            reader2.onload = function(e2) {
+              settings.heroBg = e2.target.result;
+              finalizeSave();
+            };
+            reader2.readAsDataURL(bgFile.files[0]);
+          } else {
+            finalizeSave();
+          }
+        };
+        reader.readAsDataURL(logoFile.files[0]);
+      } else if (bgFile.files && bgFile.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
           settings.heroBg = e.target.result;
-          localStorage.setItem('flora_settings', JSON.stringify(settings));
-          applySettings();
-          alert('Settings saved successfully!');
+          finalizeSave();
         };
         reader.readAsDataURL(bgFile.files[0]);
       } else {
-        localStorage.setItem('flora_settings', JSON.stringify(settings));
-        applySettings();
-        alert('Settings saved successfully!');
+        finalizeSave();
       }
     }
   </script>
