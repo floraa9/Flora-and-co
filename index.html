@@ -337,7 +337,7 @@
 
             <!-- Upload Photos & Interactive Image Reordering Bar -->
             <div class="space-y-2 bg-white p-3 rounded-lg border border-pink-100">
-              <label class="block text-[11px] font-bold text-gray-700">Upload & Reorder Product Photos (Auto-compressed for max storage)</label>
+              <label class="block text-[11px] font-bold text-gray-700">Upload & Reorder Product Photos (Unlimited Storage)</label>
               <input type="file" id="newProdImageFiles" accept="image/*" multiple onchange="handleNewImageUpload(event)" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700">
               
               <!-- Active Image Reordering Container -->
@@ -514,7 +514,7 @@
     ];
 
     let categories = JSON.parse(localStorage.getItem('flora_categories')) || DEFAULT_CATEGORIES;
-    let products = JSON.parse(localStorage.getItem('flora_products')) || DEFAULT_PRODUCTS;
+    let products = [];
     let orders = JSON.parse(localStorage.getItem('flora_orders')) || [];
     let settings = JSON.parse(localStorage.getItem('flora_settings')) || {
       logoImg: '',
@@ -542,7 +542,78 @@
     let selectedQty = 1;
     let currentEditingImages = [];
 
-    // AUTOMATIC CLIENT-SIDE CANVAS IMAGE COMPRESSION
+    // --- INDEXEDDB STORAGE ENGINE (UNLIMITED CAPACITY) ---
+    let db;
+    function initDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('FloraCoDatabase', 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          db = request.result;
+          resolve(db);
+        };
+        request.onupgradeneeded = (event) => {
+          const database = event.target.result;
+          if (!database.objectStoreNames.contains('products')) {
+            database.createObjectStore('products', { keyPath: 'id' });
+          }
+        };
+      });
+    }
+
+    function loadProductsFromDB() {
+      return new Promise((resolve) => {
+        if (!db) {
+          products = DEFAULT_PRODUCTS;
+          resolve(products);
+          return;
+        }
+        const transaction = db.transaction(['products'], 'readonly');
+        const store = transaction.objectStore('products');
+        const request = store.getAll();
+        request.onsuccess = () => {
+          products = request.result;
+          if (!products || products.length === 0) {
+            products = DEFAULT_PRODUCTS;
+            // Seed default products into DB
+            saveAllProductsToDB();
+          }
+          resolve(products);
+          renderStorefront();
+          if (document.getElementById('adminProductsList') && !document.getElementById('adminDashboardSection').classList.contains('hidden')) {
+            renderAdminProducts();
+          }
+        };
+        request.onerror = () => {
+          products = DEFAULT_PRODUCTS;
+          resolve(products);
+        };
+      });
+    }
+
+    function saveAllProductsToDB() {
+      if (!db) return;
+      const transaction = db.transaction(['products'], 'readwrite');
+      const store = transaction.objectStore('products');
+      products.forEach(p => store.put(p));
+    }
+
+    function saveSingleProductToDB(prod) {
+      if (!db) return;
+      const transaction = db.transaction(['products'], 'readwrite');
+      const store = transaction.objectStore('products');
+      store.put(prod);
+    }
+
+    function deleteProductFromDB(prodId) {
+      if (!db) return;
+      const transaction = db.transaction(['products'], 'readwrite');
+      const store = transaction.objectStore('products');
+      store.delete(prodId);
+    }
+    // -----------------------------------------------------
+
+    // AUTOMATIC IMAGE COMPRESSOR
     function compressImage(file, maxWidth = 800, quality = 0.75) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -564,8 +635,7 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
-            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
-            resolve(compressedBase64);
+            resolve(canvas.toDataURL('image/jpeg', quality));
           };
           img.onerror = reject;
           img.src = e.target.result;
@@ -575,7 +645,13 @@
       });
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await initDatabase();
+        await loadProductsFromDB();
+      } catch (e) {
+        products = DEFAULT_PRODUCTS;
+      }
       applySettings();
       renderCategoryNav();
       renderStorefront();
@@ -700,7 +776,6 @@
       return p.stock !== undefined && p.stock <= 0;
     }
 
-    // RENDER ALL PRODUCTS WITHOUT ANY LIMIT / LIMITS
     function renderStorefront() {
       const container = document.getElementById('storeSectionsContainer');
       const searchQuery = document.getElementById('searchInput').value.toLowerCase();
@@ -1088,9 +1163,9 @@
           } else if (prod.stock !== undefined) {
             prod.stock = Math.max(0, prod.stock - cItem.qty);
           }
+          saveSingleProductToDB(prod);
         }
       });
-      localStorage.setItem('flora_products', JSON.stringify(products));
 
       cart = [];
       updateCartUI();
@@ -1152,17 +1227,16 @@
       }
     }
 
-    // Dynamic Image Upload with Automated Compression
     async function handleNewImageUpload(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
 
       for (let i = 0; i < files.length; i++) {
         try {
-          const compressed = await compressImage(files[i]);
+          const compressed = await compressImage(files[i], 800, 0.75);
           currentEditingImages.push(compressed);
         } catch (e) {
-          console.error('Compression failed for file', files[i].name, e);
+          console.error('Compression error', e);
         }
       }
       renderImageReorderUI();
@@ -1331,6 +1405,7 @@
         finalImages = ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600'];
       }
 
+      let targetProduct;
       if (editId && existingProd) {
         existingProd.title = title;
         existingProd.category = category;
@@ -1341,9 +1416,10 @@
         existingProd.allowCustomText = allowCustomText;
         existingProd.images = finalImages;
         existingProd.description = desc;
+        targetProduct = existingProd;
         alert('Product updated successfully!');
       } else {
-        const newProd = {
+        targetProduct = {
           id: 'p_' + Date.now(),
           title: title,
           category: category,
@@ -1355,16 +1431,11 @@
           images: finalImages,
           description: desc
         };
-        products.push(newProd);
+        products.push(targetProduct);
         alert('Product added successfully!');
       }
 
-      try {
-        localStorage.setItem('flora_products', JSON.stringify(products));
-      } catch (e) {
-        alert('Storage space warning: Please try uploading smaller images or deleting old products.');
-      }
-
+      saveSingleProductToDB(targetProduct);
       resetProductForm();
       renderStorefront();
       renderAdminProducts();
@@ -1456,7 +1527,7 @@
     function deleteProduct(productId) {
       if (confirm('Delete this product?')) {
         products = products.filter(p => p.id !== productId);
-        localStorage.setItem('flora_products', JSON.stringify(products));
+        deleteProductFromDB(productId);
         renderStorefront();
         renderAdminProducts();
       }
@@ -1527,14 +1598,10 @@
         } catch(e) {}
       }
 
-      try {
-        localStorage.setItem('flora_settings', JSON.stringify(settings));
-        applySettings();
-        populateCitySelectDropdown();
-        alert('Settings saved successfully!');
-      } catch(e) {
-        alert('Storage limit error when saving settings. Try using a smaller logo image.');
-      }
+      localStorage.setItem('flora_settings', JSON.stringify(settings));
+      applySettings();
+      populateCitySelectDropdown();
+      alert('Settings saved successfully!');
     }
   </script>
 </body>
