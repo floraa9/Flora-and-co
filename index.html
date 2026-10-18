@@ -33,7 +33,7 @@
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100 transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
       
-      <!-- Logo Container (Supports Custom Uploaded Logo Image) -->
+      <!-- Logo Container -->
       <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('all')">
         <div id="logoContainer" class="flex items-center justify-center">
           <div id="defaultLogoIcon" class="w-10 h-10 rounded-full bg-pink-100 border border-pink-200 flex items-center justify-center brand-text-primary font-serif font-bold text-xl shadow-sm">
@@ -47,7 +47,7 @@
         </div>
       </div>
 
-      <!-- Action Button (Only Shopping Bag in Header) -->
+      <!-- Header Cart Icon -->
       <div class="flex items-center space-x-3 sm:space-x-5">
         <button onclick="toggleCartDrawer()" class="relative p-2 text-gray-700 hover:text-pink-600 transition">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@
     <div id="storeSectionsContainer" class="space-y-12"></div>
   </main>
 
-  <!-- Footer with Discreet Admin Login -->
+  <!-- Footer -->
   <footer class="bg-pink-50/80 border-t border-pink-100 py-8 px-4 text-center text-xs text-gray-600 mt-12">
     <div class="max-w-7xl mx-auto space-y-3">
       <p class="font-serif text-base font-bold text-gray-800">Flora & Co.</p>
@@ -100,16 +100,14 @@
     </div>
   </footer>
 
-  <!-- RETURNS & EXCHANGES POLICY MODAL -->
+  <!-- RETURNS POLICY MODAL -->
   <div id="returnsModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-pink-100 max-h-[85vh] flex flex-col">
       <div class="flex justify-between items-center border-b pb-3">
         <h3 class="font-serif text-xl font-bold text-gray-900">📦 Returns & Exchanges Policy</h3>
         <button onclick="closeReturnsModal()" class="text-gray-400 hover:text-gray-700 font-bold">✕</button>
       </div>
-      <div id="returnsModalContent" class="text-xs text-gray-600 leading-relaxed overflow-y-auto whitespace-pre-line flex-grow">
-        <!-- Dynamic Returns Policy Text -->
-      </div>
+      <div id="returnsModalContent" class="text-xs text-gray-600 leading-relaxed overflow-y-auto whitespace-pre-line flex-grow"></div>
       <button onclick="closeReturnsModal()" class="w-full brand-bg-primary text-white font-bold py-2.5 rounded-xl text-xs">Close</button>
     </div>
   </div>
@@ -118,11 +116,10 @@
   <div id="productModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-pink-100 max-h-[90vh] flex flex-col">
       
-      <!-- Image Gallery Preview -->
+      <!-- Gallery Preview -->
       <div class="relative bg-pink-50 h-60 sm:h-72 flex flex-col justify-between overflow-hidden">
         <img id="modalProductImg" src="" alt="" class="w-full h-full object-cover">
         <button onclick="closeProductModal()" class="absolute top-3 right-3 bg-white/80 hover:bg-white w-8 h-8 rounded-full flex items-center justify-center text-gray-700 shadow-md z-10">✕</button>
-        <!-- Thumbnail Bar -->
         <div id="modalGalleryThumbnails" class="absolute bottom-2 inset-x-0 flex justify-center space-x-2 px-4 overflow-x-auto hide-scrollbar z-10"></div>
       </div>
 
@@ -145,13 +142,13 @@
 
         <p id="modalProductDesc" class="text-sm text-gray-600 leading-relaxed"></p>
 
-        <!-- Dynamic Size Selection -->
+        <!-- Size Selection -->
         <div id="modalSizeContainer" class="space-y-2 hidden">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Select Size</label>
           <div id="modalSizeOptions" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <!-- Custom Monogram Text Input -->
+        <!-- Custom Monogram Input -->
         <div id="modalCustomTextContainer" class="space-y-2 hidden">
           <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Custom Embroidery / Name Monogram</label>
           <input type="text" id="modalCustomTextInput" placeholder="Enter name or initials..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
@@ -176,7 +173,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER WITH CITY DROPDOWN -->
+  <!-- CART DRAWER -->
   <div id="cartDrawer" class="fixed inset-0 bg-black/50 z-50 hidden backdrop-blur-sm flex justify-end">
     <div class="bg-white w-full max-w-md h-full flex flex-col justify-between shadow-2xl">
       <div class="p-4 border-b border-gray-100 flex items-center justify-between bg-pink-50">
@@ -201,7 +198,6 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2">
-          <!-- Dynamic City Select Dropdown -->
           <select id="custCitySelect" onchange="updateCartUI()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-pink-300 bg-white font-medium">
             <option value="">Select City / Governorate *</option>
           </select>
@@ -250,7 +246,7 @@
     </div>
   </div>
 
-  <!-- ADMIN PANEL MODAL (WITH ORDERS LISTING & LOGO UPLOAD) -->
+  <!-- ADMIN PANEL MODAL (WITH IMAGE REORDERING & MANAGED STATE) -->
   <div id="adminModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-pink-100">
       
@@ -278,7 +274,7 @@
           <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="py-2 px-4 border-b-2 border-transparent text-gray-500">Store & Shipping</button>
         </div>
 
-        <!-- 1. ORDERS RECEIVED TAB -->
+        <!-- 1. ORDERS TAB -->
         <div id="adminTabOrders" class="space-y-4">
           <div class="flex justify-between items-center">
             <h4 class="font-bold text-sm text-gray-800">Recent Customer Orders</h4>
@@ -287,7 +283,7 @@
           <div id="adminOrdersListContainer" class="space-y-3"></div>
         </div>
 
-        <!-- 2. PRODUCTS TAB -->
+        <!-- 2. PRODUCTS TAB WITH IMAGE REORDERING -->
         <div id="adminTabProducts" class="space-y-6 hidden">
           <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-100 space-y-3">
             <div class="flex justify-between items-center">
@@ -339,9 +335,14 @@
               </div>
             </div>
 
-            <div>
-              <label class="block text-[10px] font-bold text-gray-500 mb-1">Upload Multiple Product Photos</label>
-              <input type="file" id="newProdImageFiles" accept="image/*" multiple class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700">
+            <!-- Upload Photos & Interactive Image Reordering Bar -->
+            <div class="space-y-2 bg-white p-3 rounded-lg border border-pink-100">
+              <label class="block text-[11px] font-bold text-gray-700">Upload & Reorder Product Photos</label>
+              <input type="file" id="newProdImageFiles" accept="image/*" multiple onchange="handleNewImageUpload(event)" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700">
+              
+              <!-- Active Image Reordering Container -->
+              <div id="imageReorderContainer" class="flex flex-wrap gap-2 pt-2"></div>
+              <p class="text-[10px] text-gray-400">★ Note: The first image on the left will be used as the primary main cover image!</p>
             </div>
 
             <textarea id="newProdDesc" rows="2" placeholder="Product description..." class="w-full px-3 py-2 border rounded-lg text-xs bg-white"></textarea>
@@ -372,7 +373,7 @@
           <div id="adminCategoriesList" class="space-y-2"></div>
         </div>
 
-        <!-- 4. STORE SETTINGS, LOGO & CITY SHIPPING RATES TAB -->
+        <!-- 4. STORE SETTINGS TAB -->
         <div id="adminTabSettings" class="space-y-4 hidden">
           
           <h4 class="font-bold text-xs uppercase tracking-wider text-pink-700">1. Store Logo Customization</h4>
@@ -539,6 +540,9 @@
     let currentModalProduct = null;
     let selectedSize = null;
     let selectedQty = 1;
+    
+    // Active Images List for Reordering in Admin Panel
+    let currentEditingImages = [];
 
     window.addEventListener('DOMContentLoaded', () => {
       applySettings();
@@ -573,7 +577,6 @@
       document.documentElement.style.setProperty('--primary-color', settings.primaryColor || '#db2777');
       document.documentElement.style.setProperty('--bg-tint', settings.bgTint || '#fffdfa');
 
-      // Custom Logo Display
       const defaultIcon = document.getElementById('defaultLogoIcon');
       const customImg = document.getElementById('customLogoImg');
       if (settings.logoImg) {
@@ -927,7 +930,6 @@
         `).join('');
       }
 
-      // Calculate Dynamic Shipping Fee based on Selected City Dropdown
       const citySelect = document.getElementById('custCitySelect');
       const selectedOption = citySelect.options[citySelect.selectedIndex];
       const shippingFee = selectedOption && selectedOption.dataset.fee ? parseFloat(selectedOption.dataset.fee) : 0;
@@ -958,7 +960,6 @@
       }
     }
 
-    // SUBMIT ORDER, SAVE TO ORDERS LIST & DEDUCT STOCK
     function submitOrder() {
       if (cart.length === 0) {
         alert('Your cart is empty!');
@@ -992,7 +993,6 @@
         if (item.customText) itemSummaryStr += `   └ Monogram: "${item.customText}"\n`;
       });
 
-      // Save Order Record to Admin Orders State
       const newOrderRecord = {
         id: orderId,
         date: new Date().toLocaleString(),
@@ -1045,7 +1045,6 @@
         }).then(() => console.log('Email dispatched successfully!')).catch(err => console.log('Email dispatch error:', err));
       }
 
-      // Deduct Stock
       cart.forEach(cItem => {
         const prod = products.find(p => p.id === cItem.productId);
         if (prod) {
@@ -1072,7 +1071,7 @@
       document.getElementById('orderSuccessModal').classList.add('hidden');
     }
 
-    // ADMIN DASHBOARD & ORDERS MANAGEMENT
+    // ADMIN CONTROLS & IMAGE REORDERING LOGIC
     function openAdminModal() {
       document.getElementById('adminModal').classList.remove('hidden');
     }
@@ -1119,6 +1118,61 @@
         document.getElementById('adminTabSettings').classList.remove('hidden');
         document.getElementById('tabBtnSettings').className = 'py-2 px-4 border-b-2 border-pink-600 text-pink-600';
       }
+    }
+
+    // Dynamic Image Upload & Order Management
+    function handleNewImageUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      let filesProcessed = 0;
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentEditingImages.push(e.target.result);
+          filesProcessed++;
+          if (filesProcessed === files.length) {
+            renderImageReorderUI();
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderImageReorderUI() {
+      const container = document.getElementById('imageReorderContainer');
+      if (currentEditingImages.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400 italic">No photos attached to this product yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = currentEditingImages.map((imgSrc, idx) => `
+        <div class="relative bg-gray-100 p-1 rounded-lg border border-pink-200 flex flex-col items-center space-y-1">
+          <img src="${imgSrc}" class="w-16 h-16 object-cover rounded">
+          ${idx === 0 ? `<span class="bg-pink-600 text-white text-[8px] font-bold px-1 rounded absolute top-0.5 left-0.5">MAIN</span>` : ''}
+          <div class="flex items-center space-x-1">
+            <button onclick="moveImageInList(${idx}, -1)" ${idx === 0 ? 'disabled class="opacity-30"' : ''} class="text-[10px] bg-white border px-1 rounded hover:bg-gray-50">←</button>
+            <button onclick="deleteImageFromList(${idx})" class="text-[10px] bg-red-100 text-red-600 border border-red-200 px-1 rounded hover:bg-red-200">✕</button>
+            <button onclick="moveImageInList(${idx}, 1)" ${idx === currentEditingImages.length - 1 ? 'disabled class="opacity-30"' : ''} class="text-[10px] bg-white border px-1 rounded hover:bg-gray-50">→</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function moveImageInList(index, direction) {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= currentEditingImages.length) return;
+      
+      const temp = currentEditingImages[index];
+      currentEditingImages[index] = currentEditingImages[targetIndex];
+      currentEditingImages[targetIndex] = temp;
+      
+      renderImageReorderUI();
+    }
+
+    function deleteImageFromList(index) {
+      currentEditingImages.splice(index, 1);
+      renderImageReorderUI();
     }
 
     function renderAdminOrders() {
@@ -1200,7 +1254,6 @@
       const desc = document.getElementById('newProdDesc').value.trim();
       const allowCustomText = document.getElementById('newProdCustomText').checked;
       const priceMode = document.querySelector('input[name="priceMode"]:checked').value;
-      const fileInput = document.getElementById('newProdImageFiles');
 
       if (!title) {
         alert('Please enter a product title.');
@@ -1243,70 +1296,44 @@
       }
 
       const existingProd = editId ? products.find(p => p.id === editId) : null;
+      let finalImages = [...currentEditingImages];
 
-      const processImagesAndSave = (newImagesList) => {
-        let finalImages = newImagesList;
-        if (newImagesList.length === 0) {
-          if (existingProd && existingProd.images && existingProd.images.length > 0) {
-            finalImages = existingProd.images;
-          } else if (existingProd && existingProd.image) {
-            finalImages = [existingProd.image];
-          } else {
-            finalImages = ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600'];
-          }
-        }
-
-        if (editId && existingProd) {
-          existingProd.title = title;
-          existingProd.category = category;
-          existingProd.price = price;
-          existingProd.originalPrice = originalPrice;
-          existingProd.stock = stock;
-          existingProd.sizes = sizes;
-          existingProd.allowCustomText = allowCustomText;
-          existingProd.images = finalImages;
-          existingProd.description = desc;
-          alert('Product updated successfully!');
-        } else {
-          const newProd = {
-            id: 'p_' + Date.now(),
-            title: title,
-            category: category,
-            price: price,
-            originalPrice: originalPrice,
-            stock: stock,
-            sizes: sizes,
-            allowCustomText: allowCustomText,
-            images: finalImages,
-            description: desc
-          };
-          products.push(newProd);
-          alert('Product added successfully!');
-        }
-
-        localStorage.setItem('flora_products', JSON.stringify(products));
-        resetProductForm();
-        renderStorefront();
-        renderAdminProducts();
-      };
-
-      if (fileInput.files && fileInput.files.length > 0) {
-        let readImages = [];
-        let filesProcessed = 0;
-        Array.from(fileInput.files).forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            readImages.push(e.target.result);
-            filesProcessed++;
-            if (filesProcessed === fileInput.files.length) {
-              processImagesAndSave(readImages);
-            }
-          };
-          reader.readAsDataURL(file);
-        });
-      } else {
-        processImagesAndSave([]);
+      if (finalImages.length === 0) {
+        finalImages = ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=600'];
       }
+
+      if (editId && existingProd) {
+        existingProd.title = title;
+        existingProd.category = category;
+        existingProd.price = price;
+        existingProd.originalPrice = originalPrice;
+        existingProd.stock = stock;
+        existingProd.sizes = sizes;
+        existingProd.allowCustomText = allowCustomText;
+        existingProd.images = finalImages;
+        existingProd.description = desc;
+        alert('Product updated successfully!');
+      } else {
+        const newProd = {
+          id: 'p_' + Date.now(),
+          title: title,
+          category: category,
+          price: price,
+          originalPrice: originalPrice,
+          stock: stock,
+          sizes: sizes,
+          allowCustomText: allowCustomText,
+          images: finalImages,
+          description: desc
+        };
+        products.push(newProd);
+        alert('Product added successfully!');
+      }
+
+      localStorage.setItem('flora_products', JSON.stringify(products));
+      resetProductForm();
+      renderStorefront();
+      renderAdminProducts();
     }
 
     function editProduct(productId) {
@@ -1322,6 +1349,9 @@
       document.getElementById('newProdCategory').value = prod.category;
       document.getElementById('newProdDesc').value = prod.description || '';
       document.getElementById('newProdCustomText').checked = !!prod.allowCustomText;
+
+      currentEditingImages = (prod.images && prod.images.length > 0) ? [...prod.images] : (prod.image ? [prod.image] : []);
+      renderImageReorderUI();
 
       if (prod.sizes && prod.sizes.length > 0) {
         document.querySelector('input[name="priceMode"][value="sizes"]').checked = true;
@@ -1351,6 +1381,9 @@
       document.getElementById('newProdDesc').value = '';
       document.getElementById('newProdCustomText').checked = false;
       document.getElementById('newProdImageFiles').value = '';
+
+      currentEditingImages = [];
+      renderImageReorderUI();
 
       document.querySelector('input[name="priceMode"][value="single"]').checked = true;
       togglePricingModeUI();
